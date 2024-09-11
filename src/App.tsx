@@ -1,20 +1,23 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Individual } from "./pages/Individual";
 import { Header } from "./pages/Header";
+import { ThemeProvider } from "./components/theme-provider";
 
 function App() {
   return (
-    <div className="bg-accent">
-      <Header></Header>
-      <div className="p-4">
-        <Router>
-          <Routes>
-            <Route path="/individual" element={<Individual />} />
-            <Route path="/" element={<Individual />} />
-          </Routes>
-        </Router>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <div className="bg-accent">
+        <Header></Header>
+        <div className="p-4">
+          <Router>
+            <Routes>
+              <Route path="/individual" element={<Individual />} />
+              <Route path="/" element={<Individual />} />
+            </Routes>
+          </Router>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 
