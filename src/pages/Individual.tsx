@@ -1,4 +1,4 @@
-import { DemoChart } from "@/components/demo-chart";
+import { HrChart } from "@/components/hr-chart";
 import { useResultsData } from "@/lib/data";
 
 export function Individual() {
@@ -7,7 +7,8 @@ export function Individual() {
   return (
     <>
       Individual
-      <DemoChart />
+      <HrChart />
+      {/* <DemoChart /> */}
     </>
   );
 }

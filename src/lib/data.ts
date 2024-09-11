@@ -66,3 +66,37 @@ export function useResultsData() {
 
   return data;
 }
+
+export function useFlatResultsData() {
+  const [flatData, setFlatData] = useState<Record<string, any>[]>([]);
+
+  useEffect(() => {
+    Papa.parse<WellnessLoadData>('/WellnessLoad.csv', {
+      download: true,
+      header: true,
+      complete: (results) => {
+        const groupedByDate = results.data.reduce((acc, entry) => {
+          if (!acc[entry.Date]) {
+            acc[entry.Date] = {};
+          }
+          Object.entries(entry).forEach(([key, value]) => {
+            if (key !== 'Date') {
+              acc[entry.Date][`${entry.Athlete.toLowerCase().replace(/\s+/g, '_')}_${key.toLowerCase().replace(/\s+/g, '_')}`] = value;
+            }
+          });
+          return acc;
+        }, {} as Record<string, Record<string, any>>);
+
+        const flattenedData = Object.entries(groupedByDate).map(([date, data]) => ({
+          date,
+          ...data
+        }));
+
+        setFlatData(flattenedData);
+      },
+      error: (error) => console.error('Error fetching WellnessLoad data:', error)
+    });
+  }, []);
+
+  return flatData;
+}
