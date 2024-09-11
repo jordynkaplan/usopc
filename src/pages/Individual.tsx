@@ -1,3 +1,7 @@
+import { useResultsData } from "@/lib/data";
+
 export function Individual() {
-    return <>Individual</>
+  const data = useResultsData();
+  console.log({ data: data });
+  return <>Individual</>;
 }
