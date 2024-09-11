@@ -4,15 +4,17 @@ import { Header } from "./pages/Header";
 
 function App() {
   return (
-    <>
-    <Header></Header>
-    <Router>
-      <Routes>
-        <Route path="/individual" element={<Individual />} />
-        <Route path="/" element={<Individual />} />
-      </Routes>
-    </Router>
-    </>
+    <div className="bg-accent">
+      <Header></Header>
+      <div className="p-4">
+        <Router>
+          <Routes>
+            <Route path="/individual" element={<Individual />} />
+            <Route path="/" element={<Individual />} />
+          </Routes>
+        </Router>
+      </div>
+    </div>
   );
 }
 
