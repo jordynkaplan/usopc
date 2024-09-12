@@ -1,4 +1,4 @@
-import { useFlatResultsData } from "@/lib/data";
+import { useFlatWellnessData } from "@/lib/data";
 import {
   Card,
   CardContent,
@@ -23,7 +23,7 @@ import {
 import { useState, useEffect, useCallback } from "react";
 
 export function HrChart() {
-  const data = useFlatResultsData();
+  const data = useFlatWellnessData();
   const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedMetric, setSelectedMetric] = useState("resting_hr");

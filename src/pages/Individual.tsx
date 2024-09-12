@@ -2,6 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useResultsData } from "@/lib/data";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEffect, useMemo, useState } from "react";
+import { AthleteWellnessGraphs } from "@/components/athlete-wellness-graphs";
+import { WellnessChart } from "@/components/wellness-chart";
 
 export function Individual() {
   const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
@@ -28,7 +30,7 @@ export function Individual() {
     <>
       <div className="my-2">
         <Card>
-          <CardContent className = "p-6 flex gap-4 text-center">
+          <CardContent className="p-6 flex gap-4 text-center">
             <div className="flex">
               <Select
                 value={selectedAthlete || undefined}
@@ -52,6 +54,8 @@ export function Individual() {
         </Card>
       </div>
       <div className="my-4">
+        {/* <AthleteWellnessGraphs athlete={selectedAthlete} /> */}
+        <WellnessChart athlete={selectedAthlete} />
       </div>
     </>
   );

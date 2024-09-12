@@ -8,7 +8,7 @@ interface WellnessLoadData {
   Fatigue: number;
   Soreness: number;
   Motivation: number;
-  "Resting HR": number;
+  "Resting HR": number | undefined;
   "Sleep Hours": number;
   "Sleep Quality": number;
   Stress: number;
@@ -41,7 +41,14 @@ export function useWellnessLoadData() {
       download: true,
       header: true,
       complete: (results) => {
-        setData(results.data);
+        const processedData = results.data.map(entry => ({
+          ...entry,
+          "Resting HR": entry["Resting HR"] === 0 ? undefined : entry["Resting HR"]
+        }));
+
+        console.log({processedData})
+        
+        setData(processedData as WellnessLoadData[]);
       },
       error: (error) => console.error('Error fetching WellnessLoad data:', error)
     });
@@ -67,8 +74,8 @@ export function useResultsData() {
   return data;
 }
 
-export function useFlatResultsData() {
-  const [flatData, setFlatData] = useState<Record<string, any>[]>([]);
+export function useFlatWellnessData() {
+  const [flatData, setFlatData] = useState<Record<string, string | number | undefined>[]>([]);
 
   useEffect(() => {
     Papa.parse<WellnessLoadData>('/WellnessLoad.csv', {
@@ -81,11 +88,16 @@ export function useFlatResultsData() {
           }
           Object.entries(entry).forEach(([key, value]) => {
             if (key !== 'Date') {
-              acc[entry.Date][`${entry.Athlete.toLowerCase().replace(/\s+/g, '_')}_${key.toLowerCase().replace(/\s+/g, '_')}`] = value;
+              const newKey = `${entry.Athlete.toLowerCase().replace(/\s+/g, '_')}_${key.toLowerCase().replace(/\s+/g, '_')}`;
+              if (key === "Resting HR") {
+                acc[entry.Date][newKey] = value === '0' ? undefined : value;
+              } else {
+                acc[entry.Date][newKey] = value;
+              }
             }
           });
           return acc;
-        }, {} as Record<string, Record<string, any>>);
+        }, {} as Record<string, Record<string, string | number | undefined>>);
 
         const flattenedData = Object.entries(groupedByDate).map(([date, data]) => ({
           date,
