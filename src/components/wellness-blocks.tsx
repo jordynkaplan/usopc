@@ -3,7 +3,7 @@ import { WellnessBlock } from "./wellness-block";
 export function WellnessBlocks() {
   return (
     <div className="flex flex-col gap-2">
-        <p className="font-semibold text-md text-center">Wellness Metrics 10-days before Best Compeition</p>
+        <p className="font-semibold text-md text-center">Wellness Metrics 10-days Before Best Competition</p>
       <WellnessBlock
         title="Resting HR"
         description="You're burning an average of 754 calories per day. Good job!"

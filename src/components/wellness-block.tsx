@@ -31,7 +31,7 @@ export function WellnessBlock({ title, description, chartData, currentValue, uni
           config={{
             calories: {
               label: "Calories",
-              color: "hsl(var(--chart-1))",
+              color: "#a32135",
             },
           }}
           className="ml-auto w-[64px]"
@@ -46,7 +46,7 @@ export function WellnessBlock({ title, description, chartData, currentValue, uni
             }}
             data={chartData}
           >
-            <Bar dataKey="value" fill="var(--color-calories)" radius={2} fillOpacity={0.2} activeIndex={6} activeBar={<Rectangle fillOpacity={0.8} />} />
+            <Bar dataKey="value" fill="#a32135" radius={2} fillOpacity={0.2} activeIndex={6} activeBar={<Rectangle fillOpacity={0.8} />} />
             <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={4} hide />
           </BarChart>
         </ChartContainer>
