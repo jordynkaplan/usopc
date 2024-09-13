@@ -206,7 +206,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                   key={`result-${index}`}
                   x={result.Date}
                   stroke={isFastestTime ? "#4CAF50" : "#888"}
-                  strokeWidth={2}
+                  strokeWidth={3}
                   strokeDasharray="5 5"
                   label={{
                     value: `${result.Event} (${result["Time: Athlete"]})`,

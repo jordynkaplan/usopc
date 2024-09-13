@@ -1,6 +1,7 @@
 import { Bar, BarChart, Rectangle, XAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { ChartContainer } from "./ui/chart";
+import { useResultsData } from "@/lib/data";
 
 interface ChartData {
   date: string;
@@ -16,8 +17,11 @@ interface WellnessBlockProps {
 }
 
 export function WellnessBlock({ title, description, chartData, currentValue, unit }: WellnessBlockProps) {
+
+
+  
   return (
-    <Card className="max-w-md">
+    <Card className="">
       <CardHeader className="p-4 pb-0">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

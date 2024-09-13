@@ -96,7 +96,7 @@ export function Individual() {
                   <SleepCards />
                 </div>
                 <div className="lg:col-span-1">
-                  <WellnessBlocks />
+                  <WellnessBlocks athlete={selectedAthlete} />
                 </div>
               </div>
             </TabsContent>

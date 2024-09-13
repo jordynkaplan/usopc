@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
 
-interface WellnessLoadData {
+export interface WellnessLoadData {
   Date: string;
   Athlete: string;
   Gender: string;
