@@ -7,7 +7,7 @@ import { CustomHeatmap } from "./components/custom-heatmap";
 function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <div className="bg-accent">
+      <div className="bg-muted/40">
         <Header></Header>
         <div className="p-4">
           <Router>

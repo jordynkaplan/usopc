@@ -74,14 +74,16 @@ export function Individual() {
             <div className="flex items-center">
               <TabsList className="w-full">
                 <TabsTrigger
+                  className="grow data-[state=active]:bg-card-foreground data-[state=active]:text-background"
                   value="wellness"
-                  className="flex-1 data-[state=active]:bg-card-foreground data-[state=active]:text-background"
+                  // className="flex-1 data-[state=active]:bg-card-foreground data-[state=active]:text-background"
                 >
                   Wellness Analysis
                 </TabsTrigger>
                 <TabsTrigger
+                  className="grow data-[state=active]:bg-card-foreground data-[state=active]:text-background"
                   value="results"
-                  className="flex-1 data-[state=active]:bg-card-foreground data-[state=active]:text-background"
+                  // className="flex-1 data-[state=active]:bg-card-foreground data-[state=active]:text-background"
                 >
                   Results Analysis
                 </TabsTrigger>
