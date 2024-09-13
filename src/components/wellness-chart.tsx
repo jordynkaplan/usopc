@@ -73,7 +73,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
     },
   } satisfies ChartConfig;
 
-  const metrics = ["resting_hr", "motivation", "soreness", "fatigue", "sleep_hours", "sleep_quality", "stress", "travel_hours", "sport_specific_training_volume"];
+  const metrics = ["resting_hr", "motivation", "soreness", "fatigue", "sleep_hours", "sleep_quality", "stress", "travel_hours"];
 
   useEffect(() => {
     if (!athlete) return;

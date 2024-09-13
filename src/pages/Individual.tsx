@@ -13,7 +13,7 @@ import { WellnessBlocks } from "@/components/wellness-blocks";
 import { ResultsTable } from "@/components/results-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SleepCards } from "@/components/sleep-cards";
-
+import { ResultsCards } from "@/components/results-cards";
 export function Individual() {
   const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
   const gender = useGetAthleteGender(selectedAthlete);
@@ -40,36 +40,35 @@ export function Individual() {
     <>
       <div className="my-2">
         <Card>
-          <CardContent className="p-6 flex">
+          <CardContent className="p-6 flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <p className="font-semibold text-xl">Select Athlete: </p>
-              <div className="flex">
-                <Select
-                  value={selectedAthlete || undefined}
-                  onValueChange={(value: string) => {
-                    setSelectedAthlete(value);
-                  }}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select an athlete" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {athletes.map((athlete) => (
-                      <SelectItem key={athlete} value={athlete}>
-                        <span className="font-semibold text-xl">{athlete}</span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center">
-                <p className="font-semibold text-xl">
-                  Gender: {gender === "m" ? "Male" : "Female"}
-                </p>
-              </div>
+              <p className="font-semibold text-xl">Select Athlete:</p>
+              <Select
+                value={selectedAthlete || undefined}
+                onValueChange={(value: string) => {
+                  setSelectedAthlete(value);
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select an athlete" />
+                </SelectTrigger>
+                <SelectContent>
+                  {athletes.map((athlete) => (
+                    <SelectItem key={athlete} value={athlete}>
+                      <span className="font-semibold text-xl">{athlete}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center">
+              <p className="font-semibold text-xl">
+                Profile: {gender === "m" ? "Male" : "Female"}
+              </p>
             </div>
           </CardContent>
         </Card>
+
         <div className="my-2 justify-center">
           <Tabs defaultValue="wellness">
             <div className="flex items-center">
@@ -101,6 +100,7 @@ export function Individual() {
             </TabsContent>
             <TabsContent value="results">
               <div>
+                <ResultsCards />
                 <ResultsTable />
               </div>
             </TabsContent>

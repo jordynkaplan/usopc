@@ -60,27 +60,6 @@ export function ResultsTable() {
     <>
       <Card className="my-2">
         <CardContent>
-          <div className="p-6 gap-2 flex">
-            <Card>
-              <CardContent>
-                <p>Competition #</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <p>Best Result</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <p>Highest / Average Rank</p>
-              </CardContent>
-            </Card>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="my-2">
-        <CardContent>
           <div>
             <Table>
               <TableCaption>
