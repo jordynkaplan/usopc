@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import Papa from 'papaparse';
+import { useEffect, useState } from "react";
+import Papa from "papaparse";
 
 interface WellnessLoadData {
   Date: string;
@@ -33,24 +33,30 @@ interface ResultsData {
   "Split Rank: Athlete Heat 2": string;
 }
 
+export function useGetAthleteGender(selectedAthlete: string | null) {
+  const wellnessData = useWellnessLoadData();
+
+  return wellnessData.find((entry) => entry.Athlete === selectedAthlete)?.Gender;
+}
+
 export function useWellnessLoadData() {
   const [data, setData] = useState<WellnessLoadData[]>([]);
 
   useEffect(() => {
-    Papa.parse<WellnessLoadData>('/WellnessLoad.csv', {
+    Papa.parse<WellnessLoadData>("/WellnessLoad.csv", {
       download: true,
       header: true,
       complete: (results) => {
-        const processedData = results.data.map(entry => ({
+        const processedData = results.data.map((entry) => ({
           ...entry,
-          "Resting HR": entry["Resting HR"] === 0 ? undefined : entry["Resting HR"]
+          "Resting HR": entry["Resting HR"] === 0 ? undefined : entry["Resting HR"],
         }));
 
-        console.log({processedData})
-        
+        console.log({ processedData });
+
         setData(processedData as WellnessLoadData[]);
       },
-      error: (error) => console.error('Error fetching WellnessLoad data:', error)
+      error: (error) => console.error("Error fetching WellnessLoad data:", error),
     });
   }, []);
 
@@ -61,13 +67,13 @@ export function useResultsData() {
   const [data, setData] = useState<ResultsData[]>([]);
 
   useEffect(() => {
-    Papa.parse<ResultsData>('/Results.csv', {
+    Papa.parse<ResultsData>("/Results.csv", {
       download: true,
       header: true,
       complete: (results) => {
         setData(results.data);
       },
-      error: (error) => console.error('Error fetching Results data:', error)
+      error: (error) => console.error("Error fetching Results data:", error),
     });
   }, []);
 
@@ -78,7 +84,7 @@ export function useFlatWellnessData() {
   const [flatData, setFlatData] = useState<Record<string, string | number | undefined>[]>([]);
 
   useEffect(() => {
-    Papa.parse<WellnessLoadData>('/WellnessLoad.csv', {
+    Papa.parse<WellnessLoadData>("/WellnessLoad.csv", {
       download: true,
       header: true,
       complete: (results) => {
@@ -87,10 +93,10 @@ export function useFlatWellnessData() {
             acc[entry.Date] = {};
           }
           Object.entries(entry).forEach(([key, value]) => {
-            if (key !== 'Date') {
-              const newKey = `${entry.Athlete.toLowerCase().replace(/\s+/g, '_')}_${key.toLowerCase().replace(/\s+/g, '_')}`;
+            if (key !== "Date") {
+              const newKey = `${entry.Athlete.toLowerCase().replace(/\s+/g, "_")}_${key.toLowerCase().replace(/\s+/g, "_")}`;
               if (key === "Resting HR") {
-                acc[entry.Date][newKey] = value === '0' ? undefined : value;
+                acc[entry.Date][newKey] = value === "0" ? undefined : value;
               } else {
                 acc[entry.Date][newKey] = value;
               }
@@ -101,12 +107,12 @@ export function useFlatWellnessData() {
 
         const flattenedData = Object.entries(groupedByDate).map(([date, data]) => ({
           date,
-          ...data
+          ...data,
         }));
 
         setFlatData(flattenedData);
       },
-      error: (error) => console.error('Error fetching WellnessLoad data:', error)
+      error: (error) => console.error("Error fetching WellnessLoad data:", error),
     });
   }, []);
 
