@@ -63,16 +63,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
   console.log({ data });
 
   const lineColors = [
-    "#FF6B6B", // Coral Red
-    "#4ECDC4", // Caribbean Green
-    "#45B7D1", // Sky Blue
-    "#FFA07A", // Light Salmon
-    "#98D8C8", // Seafoam Green
-    "#F7B801", // Amber
-    "#7B68EE", // Medium Slate Blue
-    "#FF69B4", // Hot Pink
-    "#20B2AA", // Light Sea Green
-    "#FF7F50", // Coral
+    "#b22233"
   ];
 
   const chartConfig = {
@@ -194,7 +185,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
             />
             <Legend
               payload={[
-                { value: selectedMetric, type: "line", color: "#FF6B6B" },
+                { value: selectedMetric, type: "line", color: "#b22233" },
                 { value: "Competition Day", type: "line", color: "#888", payload: { strokeDasharray: "3 3" } },
                 { value: "Best Competition Day", type: "line", color: "#4CAF50", payload: { strokeDasharray: "5 5" } },
               ]}

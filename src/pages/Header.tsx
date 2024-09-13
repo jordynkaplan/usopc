@@ -10,6 +10,12 @@ export function Header() {
             <img className="h-full" src="/USOPCLogo.svg"></img>
           </Button>
         </div>
+        <div>
+          <Button variant="ghost" aria-label="Home" className="p-1 font-semibold text-lg">Athlete</Button>
+        </div>
+        <div>
+          <Button variant="ghost" aria-label="Home" className="p-1 font-semibold text-lg">Athlete Comparison</Button>
+        </div>
         <div className="ml-auto">
           <ModeToggle />
         </div>
