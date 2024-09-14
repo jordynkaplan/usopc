@@ -12,30 +12,66 @@ import {
     CardHeader,
     CardTitle,
 } from "./ui/card";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
-// const correlationData = {
-//   columns: [
-//     "Fatigue",
-//     "Soreness",
-//     "Motivation",
-//     "Resting HR",
-//     "Sleep Hours",
-//     "Sleep Quality",
-//     "Stress",
-//   ],
-//   index: ["Time: Athlete", "Split Time: Athlete Heat 2"],
-//   data: [
-//     [
-//       -0.0593773952, -0.2897200861, 0.1818806378, 0.0243015377, -0.1823017079,
-//       0.1026300331, 0.2204906294,
-//     ],
-//     [
-//       0.2255182311, -0.0856035251, 0.1459288801, 0.1305265142, 0.0073465097,
-//       -0.052882962, 0.1791260841,
-//     ],
-//   ],
-// };
+const MaleCorrelationData = {
+    columns: [
+        "Fatigue",
+        "Soreness",
+        "Motivation",
+        "Resting HR",
+        "Sleep Hours",
+        "Sleep Quality",
+        "Stress",
+    ],
+    index: ["Time: Athlete", "Split Time: Athlete Heat 2"],
+    data: [
+        [
+            -0.0515828708, -0.0902387205, 0.0902012788, 0.0013790306,
+            -0.1962445906, -0.0952042998, 0.28908467,
+        ],
+        [
+            -0.1340390167, -0.283751562, 0.2520458725, 0.1435612853,
+            -0.0818969347, -0.0696786922, 0.4007829913,
+        ],
+    ],
+};
+
+const FemaleCorrelationData = {
+  "columns": [
+      "Fatigue",
+      "Soreness",
+      "Motivation",
+      "Resting HR",
+      "Sleep Hours",
+      "Sleep Quality",
+      "Stress"
+  ],
+  "index": [
+      "Time: Athlete",
+      "Split Time: Athlete Heat 2"
+  ],
+  "data": [
+      [
+          0.0160571175,
+          -0.4406158352,
+          0.3421687551,
+          0.2804482774,
+          -0.1689554258,
+          0.612856955,
+          0.164657757
+      ],
+      [
+          0.2738304488,
+          -0.102780947,
+          0.0686126478,
+          0.3398470198,
+          -0.3986861703,
+          -0.0886637766,
+          -0.0675392513
+      ]
+  ]
+}
 
 type CorrelationData = {
     columns: string[];
@@ -44,25 +80,27 @@ type CorrelationData = {
 };
 
 export function CustomHeatmap({ gender }: { gender: string }) {
-    const [correlationData, setCorrelationData] =
-        useState<CorrelationData | null>(null);
+    const correlationData: CorrelationData = gender === 'm' ? MaleCorrelationData : FemaleCorrelationData;
 
-    useEffect(() => {
-        const fetchCorrelationData = async () => {
-            try {
-                const response = await fetch(`/api/corr/${gender}`);
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                const data: CorrelationData = await response.json();
-                setCorrelationData(data);
-            } catch (error) {
-                console.error("Error fetching correlation data:", error);
-            }
-        };
+    // const [correlationData, setCorrelationData] =
+    //     useState<CorrelationData | null>(null);
 
-        fetchCorrelationData();
-    }, [gender]);
+    // useEffect(() => {
+    //     const fetchCorrelationData = async () => {
+    //         try {
+    //             const response = await fetch(`/api/corr/${gender}`);
+    //             if (!response.ok) {
+    //                 throw new Error("Network response was not ok");
+    //             }
+    //             const data: CorrelationData = await response.json();
+    //             setCorrelationData(data);
+    //         } catch (error) {
+    //             console.error("Error fetching correlation data:", error);
+    //         }
+    //     };
+
+    //     fetchCorrelationData();
+    // }, [gender]);
 
     const getColor = (value: number) => {
         if (value > 0) {
@@ -224,3 +262,7 @@ export function CustomHeatmap({ gender }: { gender: string }) {
         </Card>
     );
 }
+function getColor(i: number): import("csstype").Property.BackgroundColor | undefined {
+  throw new Error("Function not implemented.");
+}
+

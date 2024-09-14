@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WellnessGraphComparison } from "@/components/wellness-graph-comparions";
 import { useWellnessDataByGender } from "@/data/wellness";
 import { useState, useEffect } from "react";
 
@@ -61,7 +62,10 @@ export function AthleteComparison() {
             </TabsList>
           </div>
           <TabsContent value="wellness">
+            <div className="flex gap-4">
             <CustomHeatmap gender={selectedGender} />
+            <WellnessGraphComparison gender={selectedGender} />
+            </div>
           </TabsContent>
           <TabsContent value="results"></TabsContent>
         </Tabs>
