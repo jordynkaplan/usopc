@@ -92,9 +92,33 @@ function getMetricDescription(
     average: number,
     days: number
 ): string {
-    return `Average ${metric} in the ${days} days leading up to your best performance was ${average}${getMetricUnit(
-        metric
-    )}.`;
+    return `Avg in the ${days} days leading up to best competition.`;
+}
+
+function getLeadingDaysAvailable(
+    bestResult?: ResultsData,
+    wellnessData?: WellnessData[]
+) {
+    if (!bestResult || !wellnessData) return 0;
+
+    const bestResultDate = new Date(bestResult.Date);
+    const sortedWellnessData = wellnessData
+        .filter((entry) => new Date(entry.Date) <= bestResultDate)
+        .sort(
+            (a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime()
+        );
+
+    if (sortedWellnessData.length === 0) return 0;
+
+    const oldestEntryDate = new Date(
+        sortedWellnessData[sortedWellnessData.length - 1].Date
+    );
+    const daysDifference = Math.floor(
+        (bestResultDate.getTime() - oldestEntryDate.getTime()) /
+            (1000 * 3600 * 24)
+    );
+
+    return daysDifference + 1; // Include the day of the best result
 }
 
 export function WellnessBlocks({ athlete }: WellnessBlocksProps) {
@@ -106,6 +130,7 @@ export function WellnessBlocks({ athlete }: WellnessBlocksProps) {
         () => getBestResult(athleteResults),
         [athleteResults]
     );
+
     const wellnessLeadingUpData = useMemo(
         () =>
             getWellnessLeadingUpData({
@@ -136,6 +161,10 @@ export function WellnessBlocks({ athlete }: WellnessBlocksProps) {
         };
     });
 
+    const leadingDaysAvailable = useMemo(() => {
+        return getLeadingDaysAvailable(bestResult, athleteWellnessData);
+    }, [bestResult, athleteWellnessData]);
+
     return (
         <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between mb-4">
@@ -148,7 +177,7 @@ export function WellnessBlocks({ athlete }: WellnessBlocksProps) {
                         value={[leadingDays]}
                         onValueChange={(value) => setLeadingDays(value[0])}
                         min={1}
-                        max={30}
+                        max={leadingDaysAvailable}
                         step={1}
                         className="w-[100px]"
                     />
