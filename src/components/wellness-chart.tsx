@@ -279,7 +279,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     color: "#b22233",
                                 },
                                 {
-                                    value: "Competition Day",
+                                    value: "Competition Day (Total Time)",
                                     type: "line",
                                     color: "#888",
                                     payload: { strokeDasharray: "3 3" },
@@ -301,7 +301,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 key={`${selectedMetric}`}
                                 connectNulls
                                 dataKey={`${selectedMetric}`}
-                                type="natural"
+                                type="bump"
                                 stroke={lineColors[0]}
                                 strokeWidth={2}
                                 dot={false}
@@ -319,15 +319,18 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     key={`result-${index}`}
                                     x={result.Date}
                                     stroke={isFastestTime ? "#4CAF50" : "#888"}
-                                    strokeWidth={2}
+                                    strokeWidth={3}
                                     strokeDasharray="5 5"
                                     label={{
-                                        value: `${result.Event} (${result["Time: Athlete"]})`,
+                                        value: result["Time: Athlete"]
+                                            ? `${result["Time: Athlete"]} sec`
+                                            : "DNF",
                                         position: "top",
                                         fill: isFastestTime
                                             ? "#4CAF50"
                                             : "#888",
-                                        fontSize: 10,
+                                        fontSize: 12,
+                                        fontWeight: "semibold",
                                         offset: -20 + index * -15,
                                     }}
                                 />
