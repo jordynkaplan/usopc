@@ -37,6 +37,10 @@ const MaleCorrelationData = {
     ],
 };
 
+const maleCorrelatinSummary = {
+  
+}
+
 const FemaleCorrelationData = {
   "columns": [
       "Fatigue",

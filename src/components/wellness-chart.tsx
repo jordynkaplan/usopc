@@ -104,6 +104,17 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         );
     }, [athleteResults]);
 
+    const highestRankDates = useMemo(() => {
+        if (!athleteResults) return [];
+        const ranks = athleteResults
+            .map((result) => Number(result["Rank: Athlete"]))
+            .filter((rank) => !isNaN(rank));
+        const highestRank = Math.min(...ranks);
+        return athleteResults
+            .filter((result) => Number(result["Rank: Athlete"]) === highestRank)
+            .map((result) => result.Date);
+    }, [athleteResults]);
+
     const filledWellnessData = useWellnessDataWithFilledCompetitionDays({
         wellnessData: cleanedWellnessData,
         athleteResults,
@@ -286,7 +297,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     payload: { strokeDasharray: "3 3" },
                                 },
                                 {
-                                    value: "Best Competition Day",
+                                    value: "Highest Rank Competition(s)",
                                     type: "line",
                                     color: "#4CAF50",
                                     payload: { strokeDasharray: "5 5" },
@@ -309,17 +320,11 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                             />
                         )}
                         {athleteResults?.map((result, index) => {
-                            console.log({ fastestTime });
-                            console.log({ result: result["Time: Athlete"] });
-                            const isFastestTime =
-                                Number(result["Time: Athlete"]) === fastestTime;
-                            console.log({ resultDate: result.Date });
-
                             return (
                                 <ReferenceLine
                                     key={`result-${index}`}
                                     x={result.Date}
-                                    stroke={isFastestTime ? "#4CAF50" : "#888"}
+                                    stroke="#888"
                                     strokeWidth={3}
                                     strokeDasharray="5 5"
                                     label={{
@@ -327,9 +332,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                             ? `${result["Time: Athlete"]} sec`
                                             : "DNF",
                                         position: "top",
-                                        fill: isFastestTime
-                                            ? "#4CAF50"
-                                            : "#888",
+                                        fill: "#888",
                                         fontSize: 12,
                                         fontWeight: "semibold",
                                         offset: -20 + index * -15,
@@ -337,6 +340,23 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 />
                             );
                         })}
+                        {highestRankDates.map((date, index) => (
+                            <ReferenceLine
+                                key={`highest-rank-${index}`}
+                                x={date}
+                                stroke="#4CAF50"
+                                strokeWidth={3}
+                                strokeDasharray="5 5"
+                                label={{
+                                    value: "Highest Rank",
+                                    position: "top",
+                                    fill: "#4CAF50",
+                                    fontSize: 12,
+                                    fontWeight: "bold",
+                                    offset: 10 + index * 15,
+                                }}
+                            />
+                        ))}
                     </LineChart>
                 </ChartContainer>
             </CardContent>

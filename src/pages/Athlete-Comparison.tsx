@@ -62,7 +62,7 @@ export function AthleteComparison() {
             </TabsList>
           </div>
           <TabsContent value="wellness">
-            <div className="flex gap-4">
+            <div className="gap-4">
             <CustomHeatmap gender={selectedGender} />
             <WellnessGraphComparison gender={selectedGender} />
             </div>

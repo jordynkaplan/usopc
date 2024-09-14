@@ -22,12 +22,6 @@ export function ResultsCards({ athlete }: { athlete: string | null }) {
               </Card>
               <Card className="flex-1">
                 <CardContent className="flex flex-col items-center p-6 justify-center h-full">
-                  <p className="text-center">Best Result</p>
-                  <p className="font-bold text-3xl">{bestResult.toFixed(2)} sec</p>
-                </CardContent>
-              </Card>
-              <Card className="flex-1">
-                <CardContent className="flex flex-col items-center p-6 justify-center h-full">
                   <p className="text-center">Highest Rank</p>
                   <p className="font-bold text-3xl">{highestRank}</p>
                 </CardContent>
@@ -40,8 +34,20 @@ export function ResultsCards({ athlete }: { athlete: string | null }) {
               </Card>
               <Card className="flex-1">
                 <CardContent className="flex flex-col items-center p-6 justify-center h-full">
-                  <p className="text-center">Best Split: Time Heat 2</p>
-                  <p className="font-bold text-3xl">{bestSplitTimeHeat2.toFixed(2)}</p>
+                  <p className="text-center">Best % off Best Time</p>
+                  {/* <p className="font-bold text-3xl">{averageRank.toFixed(2)}</p> */}
+                </CardContent>
+              </Card>
+              <Card className="flex-1">
+                <CardContent className="flex flex-col items-center p-6 justify-center h-full">
+                  <p className="text-center">Best % off Best Heat 1 Time</p>
+                  {/* <p className="font-bold text-3xl">{averageRank.toFixed(2)}</p> */}
+                </CardContent>
+              </Card>
+              <Card className="flex-1">
+                <CardContent className="flex flex-col items-center p-6 justify-center h-full">
+                  <p className="text-center">Best % off Best Heat 2 Time</p>
+                  {/* <p className="font-bold text-3xl">{averageRank.toFixed(2)}</p> */}
                 </CardContent>
               </Card>
             </div>
