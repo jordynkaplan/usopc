@@ -16,11 +16,14 @@ export interface ResultsData {
     "Time: Best Heat 2": string;
     "Split Time: Athlete Heat 2": string;
     "Split Rank: Athlete Heat 2": string;
+    "Time Delta: Best": string;
+    "Time Delta: Heat 1": string;
+    "Time Delta: Heat 2": string;
 }
 
 const fetchResultsData = async (): Promise<ResultsData[]> => {
     return new Promise((resolve, reject) => {
-        Papa.parse<ResultsData>("/Results.csv", {
+        Papa.parse<ResultsData>("/ResultsWithFeatures.csv", {
             download: true,
             header: true,
             complete: (results) => resolve(results.data as ResultsData[]),
@@ -66,10 +69,8 @@ export function useResultsDataByGender(gender?: string) {
         queryKey: ["resultsDataByGender", gender],
         queryFn: () =>
             fetchResultsData().then((data) =>
-                data.filter((entry) => entry.Event.startsWith(gender || ''))
+                data.filter((entry) => entry.Event.startsWith(gender || ""))
             ),
         enabled: !!gender,
     });
 }
-
-
