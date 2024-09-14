@@ -48,3 +48,15 @@ export function useResultsDataByAthlete(athlete?: string | null) {
         staleTime: Infinity,
     });
 }
+
+export function getBestResult(results?: ResultsData[]) {
+    if (!results || results.length === 0) {
+        return undefined;
+    }
+
+    return results.reduce((min, result) => {
+        const currentTime = parseFloat(result["Time: Athlete"]);
+        const minTime = parseFloat(min["Time: Athlete"]);
+        return currentTime < minTime ? result : min;
+    }, results[0]);
+}

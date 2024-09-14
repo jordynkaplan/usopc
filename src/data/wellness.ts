@@ -1,5 +1,6 @@
 import Papa from "papaparse";
 import { useQuery } from "@tanstack/react-query";
+import { ResultsData } from "./results";
 
 export interface WellnessData {
     Date: string;
@@ -121,4 +122,41 @@ export function useGetAthleteGender(athlete?: string | null) {
         (entry) => entry.Athlete === athlete
     );
     return athleteData?.Gender;
+}
+
+export function getWellnessLeadingUpData({
+    wellnessData,
+    bestResult,
+    days,
+}: {
+    wellnessData?: WellnessData[];
+    bestResult?: ResultsData;
+    days: number;
+}) {
+    if (!wellnessData || !bestResult) {
+        return [];
+    }
+
+    const bestResultDate = bestResult ? new Date(bestResult.Date) : new Date();
+    const daysBefore = bestResultDate ? new Date(bestResultDate) : new Date();
+    daysBefore.setDate(bestResultDate.getDate() - days);
+
+    return wellnessData.filter((entry) => {
+        const entryDate = new Date(entry.Date);
+        return entryDate >= daysBefore && entryDate <= bestResultDate;
+    });
+}
+
+export function calculateAverageMetric(
+    wellnessLeadingUpData: WellnessData[],
+    metric: keyof WellnessData
+): number {
+    const validValues = wellnessLeadingUpData
+        .map((entry) => Number(entry[metric]))
+        .filter((value) => !isNaN(value));
+
+    if (validValues.length === 0) return 0;
+
+    const sum = validValues.reduce((acc, value) => acc + value, 0);
+    return Number((sum / validValues.length).toFixed(2));
 }

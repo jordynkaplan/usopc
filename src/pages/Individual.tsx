@@ -11,11 +11,12 @@ import { WellnessChart } from "@/components/wellness-chart";
 import { WellnessBlocks } from "@/components/wellness-blocks";
 import { ResultsTable } from "@/components/results-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SleepCards } from "@/components/sleep-cards";
 import { ResultsCards } from "@/components/results-cards";
 import { useGetAthleteGender } from "@/data/wellness";
 import { useResultsData } from "@/data/results";
 import { uniqueValues } from "@/lib/utils";
+import * as portals from "react-reverse-portal";
+
 export function Individual() {
     const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
     const gender = useGetAthleteGender(selectedAthlete);
@@ -33,6 +34,8 @@ export function Individual() {
             setSelectedAthlete(uniqueAthletes[0]);
         }
     }, [uniqueAthletes]);
+
+    const portalNode = useMemo(() => portals.createHtmlPortalNode(), []);
 
     return (
         <>
@@ -101,10 +104,13 @@ export function Individual() {
                                         athlete={selectedAthlete}
                                         className="w-full"
                                     />
-                                    <SleepCards />
+                                    <portals.OutPortal node={portalNode} />
                                 </div>
                                 <div className="lg:col-span-1">
-                                    <WellnessBlocks athlete={selectedAthlete} />
+                                    <WellnessBlocks
+                                        athlete={selectedAthlete}
+                                        portalNode={portalNode}
+                                    />
                                 </div>
                             </div>
                         </TabsContent>

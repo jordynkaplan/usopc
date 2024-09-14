@@ -1,75 +1,19 @@
-import { ResultsData, useResultsDataByAthlete } from "@/data/results";
+import {
+    getBestResult,
+    ResultsData,
+    useResultsDataByAthlete,
+} from "@/data/results";
 import { WellnessBlock } from "./wellness-block";
-import { useWellnessLoadDataByAthlete, WellnessData } from "@/data/wellness";
+import {
+    calculateAverageMetric,
+    getWellnessLeadingUpData,
+    useWellnessLoadDataByAthlete,
+    WellnessData,
+} from "@/data/wellness";
 import { useMemo, useState } from "react";
 import { Slider } from "./ui/slider";
-
-interface WellnessBlocksProps {
-    athlete: string | null;
-}
-
-function getBestResult(results?: ResultsData[]) {
-    if (!results || results.length === 0) {
-        return undefined;
-    }
-
-    return results.reduce((min, result) => {
-        const currentTime = parseFloat(result["Time: Athlete"]);
-        const minTime = parseFloat(min["Time: Athlete"]);
-        return currentTime < minTime ? result : min;
-    }, results[0]);
-}
-
-function getWellnessLeadingUpData({
-    wellnessData,
-    bestResult,
-    days,
-}: {
-    wellnessData?: WellnessData[];
-    bestResult?: ResultsData;
-    days: number;
-}) {
-    if (!wellnessData || !bestResult) {
-        return [];
-    }
-
-    const bestResultDate = bestResult ? new Date(bestResult.Date) : new Date();
-    const daysBefore = bestResultDate ? new Date(bestResultDate) : new Date();
-    daysBefore.setDate(bestResultDate.getDate() - days);
-
-    return wellnessData.filter((entry) => {
-        const entryDate = new Date(entry.Date);
-        return entryDate >= daysBefore && entryDate <= bestResultDate;
-    });
-}
-
-function prepareChartData(
-    wellnessLeadingUpData: WellnessData[],
-    metric: keyof WellnessData
-) {
-    return wellnessLeadingUpData
-        .map((entry) => ({
-            date: entry.Date,
-            value: +(entry?.[metric] ?? 0),
-        }))
-        .sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        );
-}
-
-function calculateAverageMetric(
-    wellnessLeadingUpData: WellnessData[],
-    metric: keyof WellnessData
-): number {
-    const validValues = wellnessLeadingUpData
-        .map((entry) => Number(entry[metric]))
-        .filter((value) => !isNaN(value));
-
-    if (validValues.length === 0) return 0;
-
-    const sum = validValues.reduce((acc, value) => acc + value, 0);
-    return Number((sum / validValues.length).toFixed(2));
-}
+import { SleepCards } from "./sleep-cards";
+import * as portals from "react-reverse-portal";
 
 function getMetricUnit(metric: string): string {
     switch (metric) {
@@ -121,7 +65,26 @@ function getLeadingDaysAvailable(
     return daysDifference + 1; // Include the day of the best result
 }
 
-export function WellnessBlocks({ athlete }: WellnessBlocksProps) {
+function prepareChartData(
+    wellnessLeadingUpData: WellnessData[],
+    metric: keyof WellnessData
+) {
+    return wellnessLeadingUpData
+        .map((entry) => ({
+            date: entry.Date,
+            value: +(entry?.[metric] ?? 0),
+        }))
+        .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
+}
+
+interface WellnessBlocksProps {
+    athlete: string | null;
+    portalNode: portals.HtmlPortalNode;
+}
+
+export function WellnessBlocks({ athlete, portalNode }: WellnessBlocksProps) {
     const [leadingDays, setLeadingDays] = useState(10);
     const { data: athleteResults } = useResultsDataByAthlete(athlete);
     const { data: athleteWellnessData } = useWellnessLoadDataByAthlete(athlete);
@@ -193,6 +156,12 @@ export function WellnessBlocks({ athlete }: WellnessBlocksProps) {
                     unit={props.unit}
                 />
             ))}
+            <portals.InPortal node={portalNode}>
+                <SleepCards
+                    wellnessLeadingUpData={wellnessLeadingUpData}
+                    leadingDays={leadingDays}
+                />
+            </portals.InPortal>
         </div>
     );
 }
