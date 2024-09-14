@@ -1,7 +1,12 @@
 from bottle import route, run, template
 import pandas as pd
 import os
-
+import matplotlib.pyplot as plt
+import seaborn as sns
+import io
+import base64
+from bottle import response
+    
 # Load the CSV files
 results_path = os.path.join('..', 'public', 'Results.csv')
 wellness_path = os.path.join('..', 'public', 'WellnessLoad.csv')
@@ -16,17 +21,16 @@ merged_df = pd.merge(results_df, wellness_df, on=['Athlete', 'Date'])
 performance_metrics = ['Time: Athlete', 'Split Time: Athlete Heat 2']
 wellness_factors = ['Fatigue', 'Soreness', 'Motivation', 'Resting HR', 'Sleep Hours', 'Sleep Quality', 'Stress']
 
-@route('/corr')
-def index():
-    correlations = merged_df[performance_metrics + wellness_factors].corr().loc[performance_metrics, wellness_factors]
-    
-    # Draw corrleation matrix and save to png
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    import io
-    import base64
-    from bottle import response
+@route('/corr/<gender>')
+def index(gender):
+    return compute_correlations(gender)
 
+def compute_correlations(gender):
+    gender_df = merged_df[merged_df['Gender'] == gender]
+    
+    correlations = gender_df[performance_metrics + wellness_factors].corr().loc[performance_metrics, wellness_factors]
+
+    
     # Create a heatmap of the correlations
     plt.figure(figsize=(12, 8))
     sns.heatmap(correlations, annot=True, cmap='coolwarm', vmin=-1, vmax=1, center=0)
