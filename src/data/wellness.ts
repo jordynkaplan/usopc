@@ -164,3 +164,16 @@ export function calculateAverageMetric(
   const sum = validValues.reduce((acc, value) => acc + value, 0);
   return Number((sum / validValues.length).toFixed(2));
 }
+
+export function useWellnessDataByGender(gender?: string) {
+
+    return useQuery<WellnessData[], Error>({
+        queryKey: ["wellnessDataByGender", gender],
+        queryFn: () =>
+            fetchWellnessLoadData().then((data) =>
+                data.filter((entry) => entry.Gender === gender)
+            ),
+        enabled: !!gender,
+        staleTime: Infinity,
+    });
+}

@@ -61,32 +61,15 @@ export function getBestResult(results?: ResultsData[]) {
     }, results[0]);
 }
 
-export function getBestResultByGender(results?: ResultsData[], gender?: string) {
-    if (!results || results.length === 0 || !gender) {
-        return undefined;
-    }
-
-    const genderEvent = gender === 'm' ? "Men's" : "Women's";
-
-    return results.filter((result) => result.Event.startsWith(genderEvent)).reduce((min, result) => {
-        const currentTime = parseFloat(result["Time: Athlete"]);
-        const minTime = parseFloat(min["Time: Athlete"]);
-        return currentTime < minTime ? result : min;
-    }, results[0]);
+export function useResultsDataByGender(gender?: string) {
+    return useQuery<ResultsData[], Error>({
+        queryKey: ["resultsDataByGender", gender],
+        queryFn: () =>
+            fetchResultsData().then((data) =>
+                data.filter((entry) => entry.Event.startsWith(gender || ''))
+            ),
+        enabled: !!gender,
+    });
 }
 
-export function getBestResultByGenderAndEvent(results?: ResultsData[], gender?: string, event?: string) {
-    if (!results || results.length === 0 || !gender || !event) {
-        return undefined;
-    }
-
-    const genderEvent = gender === 'm' ? "Men's" : "Women's";
-    const eventName = `${genderEvent} ${event}`;
-
-    return results.filter((result) => result.Event === eventName).reduce((min, result) => {
-        const currentTime = parseFloat(result["Time: Athlete"]);
-        const minTime = parseFloat(min["Time: Athlete"]);
-        return currentTime < minTime ? result : min;
-    }, results[0]);
-}
 
