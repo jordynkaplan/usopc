@@ -115,6 +115,14 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
             .map((result) => result.Date);
     }, [athleteResults]);
 
+    const bestTimeDelta = useMemo(() => {
+        if (!athleteResults) return null;
+        const timeDeltaBest = athleteResults
+            .map((result) => Number(result["Time Delta: Best"]))
+            .filter((delta) => !isNaN(delta));
+        return Math.min(...timeDeltaBest);
+    }, [athleteResults]);
+
     const filledWellnessData = useWellnessDataWithFilledCompetitionDays({
         wellnessData: cleanedWellnessData,
         athleteResults,
@@ -138,7 +146,6 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         const max = Math.max(...values);
         return [min, max];
     }, [filledWellnessData, selectedMetric]);
-
 
     const chartConfig = {
         desktop: {
@@ -302,6 +309,12 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     color: "#4CAF50",
                                     payload: { strokeDasharray: "5 5" },
                                 },
+                                {
+                                    value: "Best Time Delta",
+                                    type: "line",
+                                    color: "#4b90ad",
+                                    payload: { strokeDasharray: "5 5" },
+                                },
                             ]}
                             wrapperStyle={{ fontSize: "14px" }}
                             iconSize={20}
@@ -324,7 +337,12 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 <ReferenceLine
                                     key={`result-${index}`}
                                     x={result.Date}
-                                    stroke="#888"
+                                    stroke={
+                                        bestTimeDelta ===
+                                        Number(result["Time Delta: Best"])
+                                            ? "#4b90ad"
+                                            : "#888"
+                                    }
                                     strokeWidth={3}
                                     strokeDasharray="5 5"
                                     label={{
