@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+    frontend:
+        build:
+            context: .
+        ports:
+            - "80:80"
+        networks:
+            main:
+                aliases:
+                    - frontend
+
+networks:
+    main:
+        driver: bridge
