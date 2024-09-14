@@ -26,7 +26,10 @@ def index(gender):
     return compute_correlations(gender)
 
 def compute_correlations(gender):
-    gender_df = merged_df[merged_df['Gender'] == gender]
+    gender_df = merged_df.copy()
+    print(gender)
+    if gender in ['m', 'f']:
+        gender_df = merged_df[merged_df['Gender'] == gender]
     
     correlations = gender_df[performance_metrics + wellness_factors].corr().loc[performance_metrics, wellness_factors]
 

@@ -48,8 +48,6 @@ export function CustomHeatmap({ gender }: { gender: string }) {
         useState<CorrelationData | null>(null);
 
     useEffect(() => {
-        if (!gender) return;
-
         const fetchCorrelationData = async () => {
             try {
                 const response = await fetch(`/api/corr/${gender}`);
