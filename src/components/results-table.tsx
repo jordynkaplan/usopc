@@ -8,54 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { useResultsDataByAthlete } from "@/data/results";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
-
-export function ResultsTable() {
+export function ResultsTable({ athlete }: { athlete: string | null }) {
+  const { data: athleteResults } = useResultsDataByAthlete(athlete);
   return (
     <>
       <Card className="my-2">
@@ -63,36 +20,264 @@ export function ResultsTable() {
           <div>
             <Table>
               <TableCaption>
-                Highlight best splits and result in table
+                Lowest/fastest times and ranks higlighted in green,
+                slowest/highest times and ranks in red, and missing data in
+                yellow.
               </TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[100px]">Invoice</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Method</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead className="w-[100px] text-right font-bold">
+                    Date
+                  </TableHead>
+                  <TableHead className="text-right font-bold">Rank</TableHead>
+                  <TableHead className="text-right font-bold">
+                    Total Time (sec)
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Heat 1 (sec)
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Split Time: Heat 1 (sec)
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Split Rank: Heat 1
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Heat 2 (sec)
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Split Time: Heat 2 (sec)
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Split Rank: Heat 2
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.map((invoice) => (
-                  <TableRow key={invoice.invoice}>
-                    <TableCell className="font-medium">
-                      {invoice.invoice}
-                    </TableCell>
-                    <TableCell>{invoice.paymentStatus}</TableCell>
-                    <TableCell>{invoice.paymentMethod}</TableCell>
-                    <TableCell className="text-right">
-                      {invoice.totalAmount}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {athleteResults?.map((athlete, index, array) => {
+                  const bestRank = Math.min(
+                    ...array.map(
+                      (a) => parseInt(a["Rank: Athlete"]) || Infinity
+                    )
+                  );
+                  const bestTime = Math.min(
+                    ...array.map(
+                      (a) => parseFloat(a["Time: Athlete"]) || Infinity
+                    )
+                  );
+                  const bestTimeHeat1 = Math.min(
+                    ...array.map(
+                      (a) => parseFloat(a["Time: Athlete Heat 1"]) || Infinity
+                    )
+                  );
+                  const bestSplitTimeHeat1 = Math.min(
+                    ...array.map(
+                      (a) =>
+                        parseFloat(a["Split Time: Athlete Heat 1"]) || Infinity
+                    )
+                  );
+                  const bestSplitRankHeat1 = Math.min(
+                    ...array.map(
+                      (a) =>
+                        parseInt(a["Split Rank: Athlete Heat 1"]) || Infinity
+                    )
+                  );
+                  const bestTimeHeat2 = Math.min(
+                    ...array.map(
+                      (a) => parseFloat(a["Time: Athlete Heat 2"]) || Infinity
+                    )
+                  );
+                  const bestSplitTimeHeat2 = Math.min(
+                    ...array.map(
+                      (a) =>
+                        parseFloat(a["Split Time: Athlete Heat 2"]) || Infinity
+                    )
+                  );
+                  const bestSplitRankHeat2 = Math.min(
+                    ...array.map(
+                      (a) =>
+                        parseInt(a["Split Rank: Athlete Heat 2"]) || Infinity
+                    )
+                  );
+
+                  const worstRank = Math.max(
+                    ...array.map(
+                      (a) => parseInt(a["Rank: Athlete"]) || -Infinity
+                    )
+                  );
+                  const worstTime = Math.max(
+                    ...array.map(
+                      (a) => parseFloat(a["Time: Athlete"]) || -Infinity
+                    )
+                  );
+                  const worstTimeHeat1 = Math.max(
+                    ...array.map(
+                      (a) => parseFloat(a["Time: Athlete Heat 1"]) || -Infinity
+                    )
+                  );
+                  const worstSplitTimeHeat1 = Math.max(
+                    ...array.map(
+                      (a) =>
+                        parseFloat(a["Split Time: Athlete Heat 1"]) || -Infinity
+                    )
+                  );
+                  const worstSplitRankHeat1 = Math.max(
+                    ...array.map(
+                      (a) =>
+                        parseInt(a["Split Rank: Athlete Heat 1"]) || -Infinity
+                    )
+                  );
+                  const worstTimeHeat2 = Math.max(
+                    ...array.map(
+                      (a) => parseFloat(a["Time: Athlete Heat 2"]) || -Infinity
+                    )
+                  );
+                  const worstSplitTimeHeat2 = Math.max(
+                    ...array.map(
+                      (a) =>
+                        parseFloat(a["Split Time: Athlete Heat 2"]) || -Infinity
+                    )
+                  );
+                  const worstSplitRankHeat2 = Math.max(
+                    ...array.map(
+                      (a) =>
+                        parseInt(a["Split Rank: Athlete Heat 2"]) || -Infinity
+                    )
+                  );
+
+                  return (
+                    <TableRow key={athlete.Date}>
+                      <TableCell className="text-right">
+                        {athlete.Date}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${
+                          athlete["Rank: Athlete"] === ""
+                            ? "bg-yellow-200/50"
+                            : parseInt(athlete["Rank: Athlete"]) === bestRank
+                            ? "bg-green-200"
+                            : parseInt(athlete["Rank: Athlete"]) === worstRank
+                            ? "bg-red-200"
+                            : ""
+                        }`}
+                      >
+                        {athlete["Rank: Athlete"]}
+                      </TableCell>
+                      <TableCell
+                        className={`font-medium text-right ${
+                          athlete["Time: Athlete"] === ""
+                            ? "bg-yellow-200/50"
+                            : parseFloat(athlete["Time: Athlete"]) === bestTime
+                            ? "bg-green-200"
+                            : parseFloat(athlete["Time: Athlete"]) === worstTime
+                            ? "bg-red-200"
+                            : ""
+                        }`}
+                      >
+                        {athlete["Time: Athlete"]}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${
+                          athlete["Time: Athlete Heat 1"] === ""
+                            ? "bg-yellow-200/50"
+                            : parseFloat(athlete["Time: Athlete Heat 1"]) ===
+                              bestTimeHeat1
+                            ? "bg-green-200"
+                            : parseFloat(athlete["Time: Athlete Heat 1"]) ===
+                              worstTimeHeat1
+                            ? "bg-red-200"
+                            : ""
+                        }`}
+                      >
+                        {athlete["Time: Athlete Heat 1"]}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${
+                          athlete["Split Time: Athlete Heat 1"] === ""
+                            ? "bg-yellow-200/50"
+                            : parseFloat(
+                                athlete["Split Time: Athlete Heat 1"]
+                              ) === bestSplitTimeHeat1
+                            ? "bg-green-200"
+                            : parseFloat(
+                                athlete["Split Time: Athlete Heat 1"]
+                              ) === worstSplitTimeHeat1
+                            ? "bg-red-200"
+                            : ""
+                        }`}
+                      >
+                        {athlete["Split Time: Athlete Heat 1"]}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${
+                          athlete["Split Rank: Athlete Heat 1"] === ""
+                            ? "bg-yellow-200/50"
+                            : parseInt(
+                                athlete["Split Rank: Athlete Heat 1"]
+                              ) === bestSplitRankHeat1
+                            ? "bg-green-200"
+                            : parseInt(
+                                athlete["Split Rank: Athlete Heat 1"]
+                              ) === worstSplitRankHeat1
+                            ? "bg-red-200"
+                            : ""
+                        }`}
+                      >
+                        {athlete["Split Rank: Athlete Heat 1"]}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${
+                          athlete["Time: Athlete Heat 2"] === ""
+                            ? "bg-yellow-200/50"
+                            : parseFloat(athlete["Time: Athlete Heat 2"]) ===
+                              bestTimeHeat2
+                            ? "bg-green-200"
+                            : parseFloat(athlete["Time: Athlete Heat 2"]) ===
+                              worstTimeHeat2
+                            ? "bg-red-200"
+                            : ""
+                        }`}
+                      >
+                        {athlete["Time: Athlete Heat 2"]}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${
+                          athlete["Split Time: Athlete Heat 2"] === ""
+                            ? "bg-yellow-200/50"
+                            : parseFloat(
+                                athlete["Split Time: Athlete Heat 2"]
+                              ) === bestSplitTimeHeat2
+                            ? "bg-green-200"
+                            : parseFloat(
+                                athlete["Split Time: Athlete Heat 2"]
+                              ) === worstSplitTimeHeat2
+                            ? "bg-red-200"
+                            : ""
+                        }`}
+                      >
+                        {athlete["Split Time: Athlete Heat 2"]}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${
+                          athlete["Split Rank: Athlete Heat 2"] === ""
+                            ? "bg-yellow-200/50"
+                            : parseInt(
+                                athlete["Split Rank: Athlete Heat 2"]
+                              ) === bestSplitRankHeat2
+                            ? "bg-green-200"
+                            : parseInt(
+                                athlete["Split Rank: Athlete Heat 2"]
+                              ) === worstSplitRankHeat2
+                            ? "bg-red-200"
+                            : ""
+                        }`}
+                      >
+                        {athlete["Split Rank: Athlete Heat 2"]}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={3}>Total</TableCell>
-                  <TableCell className="text-right">$2,500.00</TableCell>
-                </TableRow>
-              </TableFooter>
             </Table>
           </div>
         </CardContent>

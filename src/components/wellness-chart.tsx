@@ -37,6 +37,8 @@ interface WellnessChartProps {
     className?: string;
 }
 
+export const lineColors = ["#b22233"];
+
 function useCleanedWellnessData(
     wellnessData: WellnessData[] | undefined,
     selectedMetric: keyof WellnessData
@@ -126,7 +128,6 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         return [min, max];
     }, [filledWellnessData, selectedMetric]);
 
-    const lineColors = ["#b22233"];
 
     const chartConfig = {
         desktop: {

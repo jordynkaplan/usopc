@@ -16,6 +16,7 @@ import { useGetAthleteGender } from "@/data/wellness";
 import { useResultsData } from "@/data/results";
 import { uniqueValues } from "@/lib/utils";
 import * as portals from "react-reverse-portal";
+import { ResultGraph } from "@/components/result-graph";
 
 export function Individual() {
     const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
@@ -116,8 +117,9 @@ export function Individual() {
                         </TabsContent>
                         <TabsContent value="results">
                             <div>
-                                <ResultsCards />
-                                <ResultsTable />
+                                <ResultsCards athlete={selectedAthlete} />
+                                <ResultsTable athlete={selectedAthlete} />
+                                <ResultGraph athlete={selectedAthlete} />
                             </div>
                         </TabsContent>
                     </Tabs>
