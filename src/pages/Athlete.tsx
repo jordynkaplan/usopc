@@ -18,7 +18,7 @@ import { uniqueValues } from "@/lib/utils";
 import * as portals from "react-reverse-portal";
 import { ResultGraph } from "@/components/result-graph";
 
-export function Individual() {
+export function Athlete() {
     const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
     const gender = useGetAthleteGender(selectedAthlete);
 

@@ -11,10 +11,10 @@ export function Header() {
           </Button>
         </div>
         <div>
-          <Button variant="ghost" aria-label="Home" className="p-1 font-semibold text-lg">Athlete</Button>
+          <Button variant="ghost" aria-label="Athlete" className="p-1 font-semibold text-lg" onClick={() => window.location.href = '/'}>Athlete</Button>
         </div>
         <div>
-          <Button variant="ghost" aria-label="Home" className="p-1 font-semibold text-lg">Athlete Comparison</Button>
+          <Button variant="ghost" aria-label="Athlete Comparison" className="p-1 font-semibold text-lg" onClick={() => window.location.href = '/athlete-comparison'}>Athlete Comparison</Button>
         </div>
         <div className="ml-auto">
           <ModeToggle />

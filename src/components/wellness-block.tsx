@@ -1,4 +1,4 @@
-import { Bar, BarChart, Rectangle, XAxis } from "recharts";
+import { Bar, BarChart, XAxis } from "recharts";
 import {
   Card,
   CardContent,

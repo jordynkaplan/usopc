@@ -32,8 +32,6 @@ function getMetricUnit(metric: string): string {
 }
 
 function getMetricDescription(
-    metric: string,
-    average: number,
     days: number
 ): string {
     return `Avg in the ${days} days leading up to best competition.`;
@@ -117,7 +115,7 @@ export function WellnessBlocks({ athlete, portalNode }: WellnessBlocksProps) {
         const average = calculateAverageMetric(wellnessLeadingUpData, metric);
         return {
             title: metric,
-            description: getMetricDescription(metric, average, leadingDays),
+            description: getMetricDescription(leadingDays),
             chartData: prepareChartData(wellnessLeadingUpData, metric),
             currentValue: average,
             unit: getMetricUnit(metric),

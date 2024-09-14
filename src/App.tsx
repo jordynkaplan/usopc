@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Individual } from "./pages/Individual";
+import { Athlete } from "./pages/Athlete";
 import { Header } from "./pages/Header";
 import { ThemeProvider } from "./components/theme-provider";
-import { CustomHeatmap } from "./components/custom-heatmap";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AthleteComparison } from "./pages/Athlete-Comparison";
 
 const queryClient = new QueryClient();
 
@@ -17,14 +17,14 @@ function App() {
                         <Router>
                             <Routes>
                                 <Route
-                                    path="/individual"
-                                    element={<Individual />}
+                                    path="/"
+                                    element={<Athlete />}
                                 />
                                 <Route
-                                    path="/corr"
-                                    element={<CustomHeatmap />}
+                                    path="/athlete-comparison"
+                                    element={<AthleteComparison />}
                                 />
-                                <Route path="/" element={<Individual />} />
+                                <Route path="/" element={<Athlete />} />
                             </Routes>
                         </Router>
                     </div>

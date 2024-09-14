@@ -3,12 +3,11 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useResultsDataByAthlete } from "@/data/results";
 
 export function ResultsTable({ athlete }: { athlete: string | null }) {
@@ -54,7 +53,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {athleteResults?.map((athlete, index, array) => {
+                {athleteResults?.map((athlete, _index, array) => {
                   const bestRank = Math.min(
                     ...array.map(
                       (a) => parseInt(a["Rank: Athlete"]) || Infinity
