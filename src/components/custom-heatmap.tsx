@@ -12,6 +12,7 @@ import {
     CardHeader,
     CardTitle,
 } from "./ui/card";
+import { useEffect, useState } from "react";
 // import { useEffect, useState } from "react";
 
 const MaleCorrelationData = {
@@ -42,40 +43,27 @@ const maleCorrelatinSummary = {
 }
 
 const FemaleCorrelationData = {
-  "columns": [
-      "Fatigue",
-      "Soreness",
-      "Motivation",
-      "Resting HR",
-      "Sleep Hours",
-      "Sleep Quality",
-      "Stress"
-  ],
-  "index": [
-      "Time: Athlete",
-      "Split Time: Athlete Heat 2"
-  ],
-  "data": [
-      [
-          0.0160571175,
-          -0.4406158352,
-          0.3421687551,
-          0.2804482774,
-          -0.1689554258,
-          0.612856955,
-          0.164657757
-      ],
-      [
-          0.2738304488,
-          -0.102780947,
-          0.0686126478,
-          0.3398470198,
-          -0.3986861703,
-          -0.0886637766,
-          -0.0675392513
-      ]
-  ]
-}
+    columns: [
+        "Fatigue",
+        "Soreness",
+        "Motivation",
+        "Resting HR",
+        "Sleep Hours",
+        "Sleep Quality",
+        "Stress",
+    ],
+    index: ["Time: Athlete", "Split Time: Athlete Heat 2"],
+    data: [
+        [
+            0.0160571175, -0.4406158352, 0.3421687551, 0.2804482774,
+            -0.1689554258, 0.612856955, 0.164657757,
+        ],
+        [
+            0.2738304488, -0.102780947, 0.0686126478, 0.3398470198,
+            -0.3986861703, -0.0886637766, -0.0675392513,
+        ],
+    ],
+};
 
 type CorrelationData = {
     columns: string[];
@@ -84,27 +72,28 @@ type CorrelationData = {
 };
 
 export function CustomHeatmap({ gender }: { gender: string }) {
-    const correlationData: CorrelationData = gender === 'm' ? MaleCorrelationData : FemaleCorrelationData;
+    // const correlationData: CorrelationData =
+    //     gender === "m" ? MaleCorrelationData : FemaleCorrelationData;
 
-    // const [correlationData, setCorrelationData] =
-    //     useState<CorrelationData | null>(null);
+    const [correlationData, setCorrelationData] =
+        useState<CorrelationData | null>(null);
 
-    // useEffect(() => {
-    //     const fetchCorrelationData = async () => {
-    //         try {
-    //             const response = await fetch(`/api/corr/${gender}`);
-    //             if (!response.ok) {
-    //                 throw new Error("Network response was not ok");
-    //             }
-    //             const data: CorrelationData = await response.json();
-    //             setCorrelationData(data);
-    //         } catch (error) {
-    //             console.error("Error fetching correlation data:", error);
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchCorrelationData = async () => {
+            try {
+                const response = await fetch(`/api/corr/${gender}`);
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data: CorrelationData = await response.json();
+                setCorrelationData(data);
+            } catch (error) {
+                console.error("Error fetching correlation data:", error);
+            }
+        };
 
-    //     fetchCorrelationData();
-    // }, [gender]);
+        fetchCorrelationData();
+    }, [gender]);
 
     const getColor = (value: number) => {
         if (value > 0) {
@@ -266,7 +255,3 @@ export function CustomHeatmap({ gender }: { gender: string }) {
         </Card>
     );
 }
-function getColor(i: number): import("csstype").Property.BackgroundColor | undefined {
-  throw new Error("Function not implemented.");
-}
-
