@@ -93,16 +93,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         wellnessData,
         selectedMetric
     );
-    console.log({ cleanedWellnessData });
     const { data: athleteResults } = useResultsDataByAthlete(athlete);
-    const fastestTime = useMemo(() => {
-        if (!athleteResults) return null;
-        return Math.min(
-            ...athleteResults
-                .map((result) => Number(result["Time: Athlete"]))
-                .filter((time) => !!time)
-        );
-    }, [athleteResults]);
 
     const highestRankDates = useMemo(() => {
         if (!athleteResults) return [];
@@ -163,7 +154,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         "Sleep Quality",
         "Stress",
         "Travel Hours",
-        "Sport Specific Training Volume"
+        "Sport Specific Training Volume",
     ] as (keyof WellnessData)[];
 
     return (
