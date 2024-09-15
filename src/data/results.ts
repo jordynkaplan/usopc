@@ -5,25 +5,26 @@ export interface ResultsData {
     Date: string;
     Athlete: string;
     Event: string;
-    "Time: Athlete": string;
-    "Time: Best": string;
-    "Rank: Athlete": string;
-    "Time: Athlete Heat 1": string;
-    "Time: Best Heat 1": string;
-    "Split Time: Athlete Heat 1": string;
-    "Split Rank: Athlete Heat 1": string;
-    "Time: Athlete Heat 2": string;
-    "Time: Best Heat 2": string;
-    "Split Time: Athlete Heat 2": string;
-    "Split Rank: Athlete Heat 2": string;
-    "Time Delta: Best": string;
-    "Time Delta: Heat 1": string;
-    "Time Delta: Heat 2": string;
+    "Time: Athlete": number;
+    "Time: Best": number;
+    "Rank: Athlete": number;
+    "Time: Athlete Heat 1": number;
+    "Time: Best Heat 1": number;
+    "Split Time: Athlete Heat 1": number;
+    "Split Rank: Athlete Heat 1": number;
+    "Time: Athlete Heat 2": number;
+    "Time: Best Heat 2": number;
+    "Split Time: Athlete Heat 2": number;
+    "Split Rank: Athlete Heat 2": number;
+    "Time Delta: Best": number;
+    "Time Delta: Heat 1": number;
+    "Time Delta: Heat 2": number;
 }
 
 const fetchResultsData = async (): Promise<ResultsData[]> => {
     return new Promise((resolve, reject) => {
         Papa.parse<ResultsData>("/ResultsWithFeatures.csv", {
+            dynamicTyping: true,
             download: true,
             header: true,
             complete: (results) => resolve(results.data as ResultsData[]),

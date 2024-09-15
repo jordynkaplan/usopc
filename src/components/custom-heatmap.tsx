@@ -4,7 +4,20 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useResultsDataByGender } from "@/data/results";
+import { useWellnessDataByGender } from "@/data/wellness";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import {
+    CartesianGrid,
+    ComposedChart,
+    Line,
+    Tooltip as RechartsTooltip,
+    ResponsiveContainer,
+    Scatter,
+    XAxis,
+    YAxis,
+} from "recharts";
 import {
     Card,
     CardContent,
@@ -12,20 +25,6 @@ import {
     CardHeader,
     CardTitle,
 } from "./ui/card";
-import { useEffect, useState } from "react";
-import { useResultsData, useResultsDataByGender } from "@/data/results";
-import { useWellnessDataByGender, useWellnessLoadData } from "@/data/wellness";
-import {
-    ScatterChart,
-    Scatter,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip as RechartsTooltip,
-    ResponsiveContainer,
-    Line,
-    ComposedChart,
-} from "recharts";
 
 type CorrelationData = {
     columns: string[];
@@ -111,30 +110,33 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                     (w) =>
                         w.Date === result.Date && w.Athlete === result.Athlete
                 );
-                const yValue = wellnessEntry
-                    ? Number(
-                          wellnessEntry[
-                              selectedElement.column as keyof typeof wellnessEntry
-                          ]
-                      )
-                    : null;
 
-                if (!yValue) return null;
+                if (!wellnessEntry) return null;
 
-                let xValue;
+                const xValue =
+                    wellnessEntry[
+                        selectedElement.column as keyof typeof wellnessEntry
+                    ];
+
+                if (xValue === null || xValue === undefined) return null;
+
+                let yValue;
 
                 if (selectedElement.row === "Time Delta: Best") {
-                    xValue = Number(result["Time Delta: Best"]);
+                    yValue = Number(result["Time Delta: Best"]);
                 } else if (selectedElement.row === "Time Delta: Heat 2") {
-                    xValue = Number(result["Time Delta: Heat 2"]);
+                    yValue = Number(result["Time Delta: Heat 2"]);
                 }
 
+                if (yValue === null || yValue === undefined) return null;
+
                 return { x: xValue as number, y: yValue as number };
-                // return null;
             })
             .filter(Boolean);
 
         const { slope, intercept } = calculateLinearRegression(scatterData);
+        console.log({ scatterData });
+        console.log({ slope, intercept });
 
         // Calculate best fit line for each data point
         scatterData.forEach((point, index) => {
@@ -377,10 +379,9 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                 <XAxis
                                     type="number"
                                     dataKey="x"
-                                    name={selectedElement?.row}
-                                    unit="s"
+                                    name={selectedElement?.column}
                                     label={{
-                                        value: selectedElement?.row,
+                                        value: selectedElement?.column,
                                         position: "bottom",
                                         offset: 0,
                                     }}
@@ -388,9 +389,10 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                 <YAxis
                                     type="number"
                                     dataKey="y"
-                                    name={selectedElement?.column}
+                                    name={selectedElement?.row}
+                                    unit="s"
                                     label={{
-                                        value: selectedElement?.column,
+                                        value: selectedElement?.row,
                                         angle: -90,
                                         position: "insideLeft",
                                     }}
