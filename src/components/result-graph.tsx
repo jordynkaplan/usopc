@@ -22,7 +22,15 @@ import {
 } from "@/components/ui/select";
 import { useResultsDataByAthlete } from "@/data/results";
 import { useEffect, useMemo, useState } from "react";
-import { Area, AreaChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
+import {
+    Area,
+    AreaChart,
+    CartesianGrid,
+    Legend,
+    XAxis,
+    YAxis,
+    ResponsiveContainer,
+} from "recharts";
 import { Badge } from "./ui/badge";
 
 export function ResultGraph({ athlete }: { athlete: string | null }) {
@@ -75,8 +83,10 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
     return (
         <Card>
             <CardHeader>
-                <div className="flex items-center justify-between">
-                    <CardTitle>Competition Heat Times vs. Best Times</CardTitle>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <CardTitle className="mb-4 sm:mb-0">
+                        Competition Heat Times vs. Best Times
+                    </CardTitle>
                     <div className="flex items-center gap-2">
                         <label
                             htmlFor="competition-date-select"
@@ -90,7 +100,7 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
                         >
                             <SelectTrigger
                                 id="competition-date-select"
-                                className="w-[180px]"
+                                className="w-full sm:w-[180px]"
                             >
                                 <SelectValue placeholder="Select competition date" />
                             </SelectTrigger>
@@ -105,7 +115,7 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
                     </div>
                 </div>
                 <CardDescription>
-                    <div className="flex items-center gap-4 font-medium">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 font-medium">
                         <div className="flex items-center gap-2">
                             <span>Heat 1:</span>
                             <Badge
@@ -137,105 +147,113 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>
-                    <AreaChart
-                        width={600}
-                        height={300}
-                        data={chartData}
-                        margin={{
-                            top: 10,
-                            right: 30,
-                            left: 0,
-                            bottom: 0,
-                        }}
-                    >
-                        <defs>
-                            <linearGradient
-                                id="fillBest"
-                                x1="0"
-                                y1="0"
-                                x2="0"
-                                y2="1"
-                            >
-                                <stop
-                                    offset="5%"
-                                    stopColor={chartConfig.best.color}
-                                    stopOpacity={0.8}
-                                />
-                                <stop
-                                    offset="40%"
-                                    stopColor={chartConfig.best.color}
-                                    stopOpacity={0.1}
-                                />
-                            </linearGradient>
-                            <linearGradient
-                                id="fillTimeDifference"
-                                x1="0"
-                                y1="0"
-                                x2="0"
-                                y2="1"
-                            >
-                                <stop
-                                    offset="5%"
-                                    stopColor={chartConfig.timeDifference.color}
-                                    stopOpacity={0.5}
-                                />
-                                <stop
-                                    offset="95%"
-                                    stopColor={chartConfig.timeDifference.color}
-                                    stopOpacity={0.05}
-                                />
-                            </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis
-                            dataKey="name"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
-                        <YAxis
-                            label={{
-                                value: "Seconds",
-                                angle: -90,
-                                position: "insideLeft",
+                    <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart
+                            data={chartData}
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
                             }}
-                            domain={[
-                                Math.min(...chartData.map((d) => d.best)) - 2,
-                                Math.max(
-                                    ...chartData.map(
-                                        (d) => d.best + d.timeDifference
-                                    )
-                                ) + 2,
-                            ]}
-                            allowDataOverflow={true}
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent />}
-                        />
-                        <Legend />
-                        <Area
-                            type="monotone"
-                            dataKey="best"
-                            stackId="1"
-                            stroke={chartConfig.best.color}
-                            fill="none"
-                            fillOpacity={1}
-                            strokeWidth={2}
-                        />
-                        <Area
-                            type="monotone"
-                            dataKey="timeDifference"
-                            stackId="1"
-                            stroke={chartConfig.timeDifference.color}
-                            fill="url(#fillTimeDifference)"
-                            fillOpacity={1}
-                            strokeWidth={2}
-                        />
-                    </AreaChart>
+                        >
+                            <defs>
+                                <linearGradient
+                                    id="fillBest"
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1"
+                                >
+                                    <stop
+                                        offset="5%"
+                                        stopColor={chartConfig.best.color}
+                                        stopOpacity={0.8}
+                                    />
+                                    <stop
+                                        offset="40%"
+                                        stopColor={chartConfig.best.color}
+                                        stopOpacity={0.1}
+                                    />
+                                </linearGradient>
+                                <linearGradient
+                                    id="fillTimeDifference"
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1"
+                                >
+                                    <stop
+                                        offset="5%"
+                                        stopColor={
+                                            chartConfig.timeDifference.color
+                                        }
+                                        stopOpacity={0.5}
+                                    />
+                                    <stop
+                                        offset="95%"
+                                        stopColor={
+                                            chartConfig.timeDifference.color
+                                        }
+                                        stopOpacity={0.05}
+                                    />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid
+                                strokeDasharray="3 3"
+                                vertical={false}
+                            />
+                            <XAxis
+                                dataKey="name"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                            />
+                            <YAxis
+                                label={{
+                                    value: "Seconds",
+                                    angle: -90,
+                                    position: "insideLeft",
+                                }}
+                                domain={[
+                                    Math.min(...chartData.map((d) => d.best)) -
+                                        2,
+                                    Math.max(
+                                        ...chartData.map(
+                                            (d) => d.best + d.timeDifference
+                                        )
+                                    ) + 2,
+                                ]}
+                                allowDataOverflow={true}
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent />}
+                            />
+                            <Legend />
+                            <Area
+                                type="monotone"
+                                dataKey="best"
+                                stackId="1"
+                                stroke={chartConfig.best.color}
+                                fill="none"
+                                fillOpacity={1}
+                                strokeWidth={2}
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="timeDifference"
+                                stackId="1"
+                                stroke={chartConfig.timeDifference.color}
+                                fill="url(#fillTimeDifference)"
+                                fillOpacity={1}
+                                strokeWidth={2}
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
                 </ChartContainer>
             </CardContent>
         </Card>

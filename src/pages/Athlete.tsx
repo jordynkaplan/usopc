@@ -42,9 +42,9 @@ export function Athlete() {
         <>
             <div className="my-2">
                 <Card>
-                    <CardContent className="p-6 flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                            <p className="font-semibold text-xl">
+                    <CardContent className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 mb-4 sm:mb-0">
+                            <p className="font-semibold text-xl text-center sm:text-left">
                                 Select Athlete:
                             </p>
                             <Select
@@ -53,7 +53,7 @@ export function Athlete() {
                                     setSelectedAthlete(value);
                                 }}
                             >
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger className="w-full sm:w-[180px]">
                                     <SelectValue placeholder="Select an athlete" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -85,14 +85,12 @@ export function Athlete() {
                                 <TabsTrigger
                                     className="grow data-[state=active]:bg-card-foreground data-[state=active]:text-background"
                                     value="wellness"
-                                    // className="flex-1 data-[state=active]:bg-card-foreground data-[state=active]:text-background"
                                 >
                                     Wellness Analysis
                                 </TabsTrigger>
                                 <TabsTrigger
                                     className="grow data-[state=active]:bg-card-foreground data-[state=active]:text-background"
                                     value="results"
-                                    // className="flex-1 data-[state=active]:bg-card-foreground data-[state=active]:text-background"
                                 >
                                     Results Analysis
                                 </TabsTrigger>
@@ -116,9 +114,11 @@ export function Athlete() {
                             </div>
                         </TabsContent>
                         <TabsContent value="results">
-                            <div>
+                            <div className="space-y-4">
                                 <ResultsCards athlete={selectedAthlete} />
-                                <ResultsTable athlete={selectedAthlete} />
+                                <div className="overflow-x-auto">
+                                    <ResultsTable athlete={selectedAthlete} />
+                                </div>
                                 <ResultGraph athlete={selectedAthlete} />
                             </div>
                         </TabsContent>

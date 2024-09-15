@@ -16,6 +16,7 @@ import {
     Scatter,
     XAxis,
     YAxis,
+    ResponsiveContainer,
 } from "recharts";
 import { Button } from "./ui/button";
 import {
@@ -316,22 +317,22 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
 
     return (
         <div className="flex flex-col lg:flex-row">
-            <Card className="flex-1 mb-4 lg:mb-0 lg:mr-4 basis-1/3">
+            <Card className="flex-1 mb-4 lg:mb-0 lg:mr-4 basis-full lg:basis-1/3">
                 <CardHeader>
-                    <CardTitle className="text-center">
+                    <CardTitle className="text-center text-sm lg:text-base">
                         Total Time and Split Time: Heat 1 & 2 - Wellness
                         Correlation Map
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="mt-8 lg:mt-16 flex flex-col lg:flex-row">
+                    <div className="mt-4 lg:mt-8 flex flex-col lg:flex-row">
                         {correlationData ? (
                             <TooltipProvider>
-                                <div className="flex-grow">
+                                <div className="flex-grow overflow-x-auto">
                                     <div
                                         className="grid gap-1"
                                         style={{
-                                            gridTemplateColumns: `auto repeat(${correlationData.columns.length}, minmax(60px, 1fr))`,
+                                            gridTemplateColumns: `auto repeat(${correlationData.columns.length}, minmax(40px, 1fr))`,
                                         }}
                                     >
                                         <div></div>

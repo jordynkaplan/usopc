@@ -21,6 +21,7 @@ import {
     CartesianGrid,
     Tooltip,
     Legend,
+    ResponsiveContainer,
 } from "recharts";
 import {
     useResultsDataByGender,
@@ -162,10 +163,10 @@ export default function ResultGraphComparison({
     return (
         <Card>
             <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <CardTitle>Competition Results Comparison</CardTitle>
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                             <label
                                 htmlFor="competition-date-select"
                                 className="text-sm font-medium whitespace-nowrap"
@@ -178,7 +179,7 @@ export default function ResultGraphComparison({
                             >
                                 <SelectTrigger
                                     id="competition-date-select"
-                                    className="w-[180px]"
+                                    className="w-full sm:w-[180px]"
                                 >
                                     <SelectValue placeholder="Select competition" />
                                 </SelectTrigger>
@@ -222,152 +223,170 @@ export default function ResultGraphComparison({
                 </div>
             </CardHeader>
             <CardContent>
-                <div className="flex">
-                    <ChartContainer config={chartConfig} className="grow">
-                        <LineChart width={500} height={300} data={chartData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis
-                                label={{
-                                    value: "Seconds",
-                                    angle: -90,
-                                    position: "insideLeft",
-                                }}
-                                domain={["dataMin", "dataMax + 10"]}
-                            />
-                            <Tooltip content={<ChartTooltipContent />} />
-                            <Legend />
-                            <Line
-                                type="monotone"
-                                dataKey="best"
-                                name="Best Time"
-                                stroke={chartConfig.best.color}
-                                strokeWidth={2}
-                                strokeDasharray="5 5"
-                            />
-                            {Object.keys(chartConfig)
-                                .filter((key) => key !== "best")
-                                .sort()
-                                .map((athlete) => (
-                                    <Line
-                                        key={athlete}
-                                        type="monotone"
-                                        dataKey={athlete}
-                                        name={athlete}
-                                        stroke={chartConfig[athlete].color}
-                                        strokeWidth={2}
-                                        connectNulls={true}
-                                    />
-                                ))}
-                        </LineChart>
+                <div className="flex flex-col lg:flex-row">
+                    <ChartContainer
+                        config={chartConfig}
+                        className="w-full lg:w-2/3 mb-4 lg:mb-0"
+                    >
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart data={chartData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" />
+                                <YAxis
+                                    label={{
+                                        value: "Seconds",
+                                        angle: -90,
+                                        position: "insideLeft",
+                                    }}
+                                    domain={["dataMin", "dataMax + 10"]}
+                                />
+                                <Tooltip content={<ChartTooltipContent />} />
+                                <Legend />
+                                <Line
+                                    type="monotone"
+                                    dataKey="best"
+                                    name="Best Time"
+                                    stroke={chartConfig.best.color}
+                                    strokeWidth={2}
+                                    strokeDasharray="5 5"
+                                />
+                                {Object.keys(chartConfig)
+                                    .filter((key) => key !== "best")
+                                    .sort()
+                                    .map((athlete) => (
+                                        <Line
+                                            key={athlete}
+                                            type="monotone"
+                                            dataKey={athlete}
+                                            name={athlete}
+                                            stroke={chartConfig[athlete].color}
+                                            strokeWidth={2}
+                                            connectNulls={true}
+                                        />
+                                    ))}
+                            </LineChart>
+                        </ResponsiveContainer>
                     </ChartContainer>
-                    <div className="ml-4 flex flex-col justify-center">
+                    <div className="lg:ml-4 lg:w-1/3">
                         <h3 className="text-lg font-semibold mb-2">
                             Heat Time Δ
                         </h3>
-                        {Object.entries(deltas)
-                            .sort(([a], [b]) => a.localeCompare(b))
-                            .map(([athlete, delta]) => (
-                                <div
-                                    key={athlete}
-                                    className="flex items-center mb-1"
-                                >
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1">
+                            {Object.entries(deltas)
+                                .sort(([a], [b]) => a.localeCompare(b))
+                                .map(([athlete, delta]) => (
                                     <div
-                                        className="w-4 h-4 mr-2"
-                                        style={{
-                                            backgroundColor:
-                                                chartConfig[athlete]?.color,
-                                        }}
-                                    ></div>
-                                    <span>{athlete}: </span>
-                                    <span
-                                        className={`ml-2 font-semibold ${
-                                            delta === "DNF"
-                                                ? "text-yellow-500"
-                                                : delta && delta < 0
-                                                ? "text-green-500"
-                                                : "text-red-500"
-                                        }`}
+                                        key={athlete}
+                                        className="flex items-center mb-1"
                                     >
-                                        {delta === "DNF"
-                                            ? "DNF"
-                                            : delta !== null
-                                            ? delta > 0
-                                                ? `+${delta.toFixed(2)}s`
-                                                : `${delta.toFixed(2)}s`
-                                            : "N/A"}
-                                    </span>
-                                </div>
-                            ))}
+                                        <div
+                                            className="w-4 h-4 mr-2 flex-shrink-0"
+                                            style={{
+                                                backgroundColor:
+                                                    chartConfig[athlete]?.color,
+                                            }}
+                                        ></div>
+                                        <span className="truncate">
+                                            {athlete}:{" "}
+                                        </span>
+                                        <span
+                                            className={`ml-2 font-semibold ${
+                                                delta === "DNF"
+                                                    ? "text-yellow-500"
+                                                    : delta && delta < 0
+                                                    ? "text-green-500"
+                                                    : "text-red-500"
+                                            }`}
+                                        >
+                                            {delta === "DNF"
+                                                ? "DNF"
+                                                : delta !== null
+                                                ? delta > 0
+                                                    ? `+${delta.toFixed(2)}s`
+                                                    : `${delta.toFixed(2)}s`
+                                                : "N/A"}
+                                        </span>
+                                    </div>
+                                ))}
+                        </div>
                         <h3 className="text-lg font-semibold mt-4 mb-2">
                             Total Times / Rank
                         </h3>
-                        {rankedTotalTimes.map(({ athlete, time, rank }) => (
-                            <div
-                                key={athlete}
-                                className="flex items-center mb-1 whitespace-nowrap"
-                            >
-                                <div
-                                    className="w-4 h-4 mr-2"
-                                    style={{
-                                        backgroundColor:
-                                            chartConfig[athlete]?.color,
-                                    }}
-                                ></div>
-                                <span>{athlete}: </span>
-                                <span className="ml-2 font-semibold text-blue-500 w-[6ch]">
-                                    {typeof time === "number"
-                                        ? `${time.toFixed(2)}s`
-                                        : "N/A"}
-                                </span>
-                                <span className="ml-2 px-2 py-[1px] text-xs font-semibold text-gray-600 bg-gray-200 rounded-full">
-                                    {(() => {
-                                        const suffixes = [
-                                            "th",
-                                            "st",
-                                            "nd",
-                                            "rd",
-                                        ];
-                                        const v = rank % 100;
-                                        return (
-                                            rank +
-                                            (suffixes[(v - 20) % 10] ||
-                                                suffixes[v] ||
-                                                suffixes[0])
-                                        );
-                                    })()}
-                                </span>
-                            </div>
-                        ))}
-                        {Object.entries(totalTimes)
-                            .filter(
-                                ([_, time]) => time === "DNF" || time === null
-                            )
-                            .sort(([a], [b]) => a.localeCompare(b))
-                            .map(([athlete, totalTime]) => (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1">
+                            {rankedTotalTimes.map(({ athlete, time, rank }) => (
                                 <div
                                     key={athlete}
-                                    className="flex items-center mb-1"
+                                    className="flex items-center mb-1 whitespace-nowrap"
                                 >
                                     <div
-                                        className="w-4 h-4 mr-2"
+                                        className="w-4 h-4 mr-2 flex-shrink-0"
                                         style={{
                                             backgroundColor:
                                                 chartConfig[athlete]?.color,
                                         }}
                                     ></div>
-                                    <span>{athlete}: </span>
-                                    <span
-                                        className={`ml-2 font-semibold ${
-                                            totalTime === "DNF"
-                                                ? "text-yellow-500"
-                                                : "text-gray-500"
-                                        }`}
-                                    >
-                                        {totalTime === "DNF" ? "DNF" : "N/A"}
+                                    <span className="truncate">
+                                        {athlete}:{" "}
+                                    </span>
+                                    <span className="ml-2 font-semibold text-blue-500 w-[6ch]">
+                                        {typeof time === "number"
+                                            ? `${time.toFixed(2)}s`
+                                            : "N/A"}
+                                    </span>
+                                    <span className="ml-2 px-2 py-[1px] text-xs font-semibold text-gray-600 bg-gray-200 rounded-full">
+                                        {(() => {
+                                            const suffixes = [
+                                                "th",
+                                                "st",
+                                                "nd",
+                                                "rd",
+                                            ];
+                                            const v = rank % 100;
+                                            return (
+                                                rank +
+                                                (suffixes[(v - 20) % 10] ||
+                                                    suffixes[v] ||
+                                                    suffixes[0])
+                                            );
+                                        })()}
                                     </span>
                                 </div>
                             ))}
+                            {Object.entries(totalTimes)
+                                .filter(
+                                    ([_, time]) =>
+                                        time === "DNF" || time === null
+                                )
+                                .sort(([a], [b]) => a.localeCompare(b))
+                                .map(([athlete, totalTime]) => (
+                                    <div
+                                        key={athlete}
+                                        className="flex items-center mb-1"
+                                    >
+                                        <div
+                                            className="w-4 h-4 mr-2 flex-shrink-0"
+                                            style={{
+                                                backgroundColor:
+                                                    chartConfig[athlete]?.color,
+                                            }}
+                                        ></div>
+                                        <span className="truncate">
+                                            {athlete}:{" "}
+                                        </span>
+                                        <span
+                                            className={`ml-2 font-semibold ${
+                                                totalTime === "DNF"
+                                                    ? "text-yellow-500"
+                                                    : "text-gray-500"
+                                            }`}
+                                        >
+                                            {totalTime === "DNF"
+                                                ? "DNF"
+                                                : "N/A"}
+                                        </span>
+                                    </div>
+                                ))}
+                        </div>
                     </div>
                 </div>
             </CardContent>

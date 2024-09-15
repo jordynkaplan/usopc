@@ -27,6 +27,7 @@ import {
     XAxis,
     YAxis,
     ReferenceLine,
+    ResponsiveContainer,
 } from "recharts";
 import { MultiSelect } from "./ui/multi-select";
 import { cn } from "@/lib/utils";
@@ -119,10 +120,12 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
     return (
         <Card>
             <CardHeader>
-                <div className="flex gap-4 my-2 justify-between">
-                    <CardTitle>Athlete Wellness Comparison</CardTitle>
-                    <div className="flex gap-2">
-                        <div>
+                <div className="flex flex-col gap-4 my-2 sm:flex-row sm:justify-between">
+                    <CardTitle className="mb-2 sm:mb-0">
+                        Athlete Wellness Comparison
+                    </CardTitle>
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                        <div className="w-full sm:w-auto">
                             <Select
                                 value={selectedMetric}
                                 onValueChange={(value) =>
@@ -131,7 +134,7 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
                                     )
                                 }
                             >
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger className="w-full sm:w-[180px]">
                                     <SelectValue placeholder="Select a metric" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -143,7 +146,7 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="w-full sm:w-auto">
                             <MultiSelect
                                 options={athleteOptions}
                                 onValueChange={setSelectedAthletes}
@@ -156,150 +159,157 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>
-                    <LineChart
-                        data={chartData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="Date" />
-                        <YAxis
-                            tickFormatter={(value) =>
-                                selectedMetric ===
-                                "Sport Specific Training Volume"
-                                    ? sportSpecificTrainingTitleMap[
-                                          value as keyof typeof sportSpecificTrainingTitleMap
-                                      ] || value
-                                    : value
-                            }
-                            ticks={
-                                selectedMetric ===
-                                "Sport Specific Training Volume"
-                                    ? [0, 1, 2, 3]
-                                    : undefined
-                            }
-                        />
-                        <ChartTooltip
-                            content={
-                                <ChartTooltipContent
-                                    labelFormatter={(value) => {
-                                        return new Date(
-                                            value
-                                        ).toLocaleDateString("en-US", {
-                                            month: "short",
-                                            day: "numeric",
-                                        });
-                                    }}
-                                    formatter={(_value, _name, item) => {
-                                        const indicatorColor =
-                                            item.payload.fill || item.color;
-                                        const indicator = "dot";
-                                        const nestLabel = false;
-                                        const isNan = isNaN(
-                                            item.value as number
-                                        );
-                                        let innerText = isNan
-                                            ? "Not reported"
-                                            : (
-                                                  item.value ?? "Not reported"
-                                              ).toLocaleString();
+                    <ResponsiveContainer width="100%" height={400}>
+                        <LineChart
+                            data={chartData}
+                            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="Date" />
+                            <YAxis
+                                tickFormatter={(value) =>
+                                    selectedMetric ===
+                                    "Sport Specific Training Volume"
+                                        ? sportSpecificTrainingTitleMap[
+                                              value as keyof typeof sportSpecificTrainingTitleMap
+                                          ] || value
+                                        : value
+                                }
+                                ticks={
+                                    selectedMetric ===
+                                    "Sport Specific Training Volume"
+                                        ? [0, 1, 2, 3]
+                                        : undefined
+                                }
+                            />
+                            <ChartTooltip
+                                content={
+                                    <ChartTooltipContent
+                                        labelFormatter={(value) => {
+                                            return new Date(
+                                                value
+                                            ).toLocaleDateString("en-US", {
+                                                month: "short",
+                                                day: "numeric",
+                                            });
+                                        }}
+                                        formatter={(_value, _name, item) => {
+                                            const indicatorColor =
+                                                item.payload.fill || item.color;
+                                            const indicator = "dot";
+                                            const nestLabel = false;
+                                            const isNan = isNaN(
+                                                item.value as number
+                                            );
+                                            let innerText = isNan
+                                                ? "Not reported"
+                                                : (
+                                                      item.value ??
+                                                      "Not reported"
+                                                  ).toLocaleString();
 
-                                        if (
-                                            selectedMetric ===
-                                                "Sport Specific Training Volume" &&
-                                            !isNan
-                                        ) {
-                                            innerText =
-                                                sportSpecificTrainingTitleMap[
-                                                    item.value as keyof typeof sportSpecificTrainingTitleMap
-                                                ] || innerText;
-                                        }
+                                            if (
+                                                selectedMetric ===
+                                                    "Sport Specific Training Volume" &&
+                                                !isNan
+                                            ) {
+                                                innerText =
+                                                    sportSpecificTrainingTitleMap[
+                                                        item.value as keyof typeof sportSpecificTrainingTitleMap
+                                                    ] || innerText;
+                                            }
 
-                                        return (
-                                            <>
-                                                <div
-                                                    className={cn(
-                                                        "shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]",
-                                                        {
-                                                            "h-2.5 w-2.5":
-                                                                indicator ===
-                                                                "dot",
+                                            return (
+                                                <>
+                                                    <div
+                                                        className={cn(
+                                                            "shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]",
+                                                            {
+                                                                "h-2.5 w-2.5":
+                                                                    indicator ===
+                                                                    "dot",
+                                                            }
+                                                        )}
+                                                        style={
+                                                            {
+                                                                "--color-bg":
+                                                                    indicatorColor,
+                                                                "--color-border":
+                                                                    indicatorColor,
+                                                            } as React.CSSProperties
                                                         }
-                                                    )}
-                                                    style={
+                                                    />
+                                                    <div
+                                                        className={cn(
+                                                            "flex flex-1 gap-2 justify-between leading-none",
+                                                            nestLabel
+                                                                ? "items-end"
+                                                                : "items-center"
+                                                        )}
+                                                    >
+                                                        <div className="grid gap-1.5">
+                                                            <span className="text-muted-foreground">
+                                                                {item.name}
+                                                            </span>
+                                                        </div>
                                                         {
-                                                            "--color-bg":
-                                                                indicatorColor,
-                                                            "--color-border":
-                                                                indicatorColor,
-                                                        } as React.CSSProperties
-                                                    }
-                                                />
-                                                <div
-                                                    className={cn(
-                                                        "flex flex-1 gap-2 justify-between leading-none",
-                                                        nestLabel
-                                                            ? "items-end"
-                                                            : "items-center"
-                                                    )}
-                                                >
-                                                    <div className="grid gap-1.5">
-                                                        <span className="text-muted-foreground">
-                                                            {item.name}
-                                                        </span>
+                                                            <span className="font-mono font-medium tabular-nums text-foreground">
+                                                                {innerText}
+                                                            </span>
+                                                        }
                                                     </div>
-                                                    {
-                                                        <span className="font-mono font-medium tabular-nums text-foreground">
-                                                            {innerText}
-                                                        </span>
-                                                    }
-                                                </div>
-                                            </>
-                                        );
-                                    }}
-                                    indicator="dot"
-                                />
-                            }
-                        />
-                        {selectedAthletes.map((athlete, index) => (
-                            <Line
-                                key={athlete}
-                                connectNulls
-                                type="monotone"
-                                dataKey={athlete}
-                                stroke={`hsl(var(--chart-${(index % 5) + 1}))`}
-                                activeDot={{ r: 8 }}
+                                                </>
+                                            );
+                                        }}
+                                        indicator="dot"
+                                    />
+                                }
                             />
-                        ))}
-                        {competitionDates.map((date, index) => (
-                            <ReferenceLine
-                                key={`competition-${index}`}
-                                x={date}
-                                stroke="#888"
-                                strokeWidth={2}
-                                strokeDasharray="3 3"
-                            />
-                        ))}
-                        <Legend
-                            payload={[
-                                ...selectedAthletes.map((athlete, index) => ({
-                                    value: athlete,
-                                    type: "line" as const,
-                                    color: `hsl(var(--chart-${
+                            {selectedAthletes.map((athlete, index) => (
+                                <Line
+                                    key={athlete}
+                                    connectNulls
+                                    type="monotone"
+                                    dataKey={athlete}
+                                    stroke={`hsl(var(--chart-${
                                         (index % 5) + 1
-                                    }))`,
-                                })),
-                                {
-                                    value: "Competition Day",
-                                    type: "line" as const,
-                                    color: "#888",
-                                },
-                            ]}
-                            wrapperStyle={{ fontSize: "14px" }}
-                            iconSize={20}
-                            verticalAlign="bottom"
-                            height={36}
-                        />
-                    </LineChart>
+                                    }))`}
+                                    activeDot={{ r: 8 }}
+                                />
+                            ))}
+                            {competitionDates.map((date, index) => (
+                                <ReferenceLine
+                                    key={`competition-${index}`}
+                                    x={date}
+                                    stroke="#888"
+                                    strokeWidth={2}
+                                    strokeDasharray="3 3"
+                                />
+                            ))}
+                            <Legend
+                                payload={[
+                                    ...selectedAthletes.map(
+                                        (athlete, index) => ({
+                                            value: athlete,
+                                            type: "line" as const,
+                                            color: `hsl(var(--chart-${
+                                                (index % 5) + 1
+                                            }))`,
+                                        })
+                                    ),
+                                    {
+                                        value: "Competition Day",
+                                        type: "line" as const,
+                                        color: "#888",
+                                    },
+                                ]}
+                                wrapperStyle={{ fontSize: "14px" }}
+                                iconSize={20}
+                                verticalAlign="bottom"
+                                height={36}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
                 </ChartContainer>
             </CardContent>
         </Card>

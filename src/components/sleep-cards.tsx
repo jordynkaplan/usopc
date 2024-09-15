@@ -70,7 +70,7 @@ export function SleepCards({
     );
 
     return (
-        <div className="my-2 grid w-full flex-1 gap-6">
+        <div className="my-2 w-full flex-1">
             <Card className="">
                 <CardHeader>
                     <CardTitle>Sleep Assessment</CardTitle>
@@ -79,9 +79,9 @@ export function SleepCards({
                         {leadingDays} days leading up to your best competition.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="flex gap-6">
-                    <div className="flex items-center gap-4 w-full">
-                        <div className="flex-1">
+                <CardContent className="flex flex-col sm:flex-row gap-6">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
+                        <div className="flex-1 w-full sm:w-auto">
                             <div className="text-lg font-semibold">
                                 Sleep Quality
                             </div>
@@ -92,7 +92,7 @@ export function SleepCards({
                                 </span>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2 grow">
+                        <div className="flex items-center gap-2 grow w-full sm:w-auto">
                             <ChartContainer
                                 config={{
                                     calories: {
@@ -100,7 +100,7 @@ export function SleepCards({
                                         color: "#a32135",
                                     },
                                 }}
-                                className="w-[64px] grow"
+                                className="w-full sm:w-[64px] grow"
                             >
                                 <BarChart
                                     accessibilityLayer
@@ -152,8 +152,8 @@ export function SleepCards({
                             </Dialog>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4 w-full">
-                        <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
+                        <div className="flex-1 w-full sm:w-auto">
                             <div className="text-lg font-semibold">
                                 Sleep Hours
                             </div>
@@ -164,7 +164,7 @@ export function SleepCards({
                                 </span>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2 grow">
+                        <div className="flex items-center gap-2 grow w-full sm:w-auto">
                             <ChartContainer
                                 config={{
                                     calories: {
@@ -172,7 +172,7 @@ export function SleepCards({
                                         color: "#a32135",
                                     },
                                 }}
-                                className="w-[64px] grow"
+                                className="w-full sm:w-[64px] grow"
                             >
                                 <BarChart
                                     accessibilityLayer
