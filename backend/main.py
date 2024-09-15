@@ -34,7 +34,7 @@ wellness_factors = [
 ]
 
 # Flag to control debug file and PNG creation
-CREATE_DEBUG_FILES = True
+CREATE_DEBUG_FILES = False
 
 @route("/corr/<gender>")
 def index(gender):
