@@ -250,7 +250,14 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                             (column, index) => (
                                                 <Tooltip key={index}>
                                                     <TooltipTrigger className="w-full">
-                                                        <div className="text-xs font-semibold text-center transform -rotate-45 origin-left whitespace-nowrap">
+                                                        <div
+                                                            className={cn(
+                                                                "text-xs font-semibold text-center transform -rotate-45 origin-left whitespace-nowrap",
+                                                                selectedElement?.column ===
+                                                                    column &&
+                                                                    "font-extrabold"
+                                                            )}
+                                                        >
                                                             {column}
                                                         </div>
                                                     </TooltipTrigger>
@@ -275,7 +282,14 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                                         key={`row-${rowIndex}`}
                                                     >
                                                         <TooltipTrigger className="w-full">
-                                                            <div className="text-xs font-semibold text-right pr-2 whitespace-nowrap">
+                                                            <div
+                                                                className={cn(
+                                                                    "text-xs font-semibold text-right pr-2 whitespace-nowrap",
+                                                                    selectedElement?.row ===
+                                                                        row &&
+                                                                        "font-bold"
+                                                                )}
+                                                            >
                                                                 {row}
                                                             </div>
                                                         </TooltipTrigger>
