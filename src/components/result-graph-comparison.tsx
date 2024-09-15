@@ -24,7 +24,6 @@ import {
 } from "recharts";
 import {
     useResultsDataByGender,
-    ResultsData,
     getAvailableCompetitions,
 } from "@/data/results";
 import { ChartContainer, ChartTooltipContent, ChartConfig } from "./ui/chart";

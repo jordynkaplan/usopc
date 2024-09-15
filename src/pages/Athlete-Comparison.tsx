@@ -14,7 +14,7 @@ import { useWellnessDataByGender } from "@/data/wellness";
 import { useState, useEffect } from "react";
 
 export function AthleteComparison() {
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
+  const [selectedGender, setSelectedGender] = useState<string>("m");
   const { data: genderData } = useWellnessDataByGender(
     selectedGender || undefined
   );
