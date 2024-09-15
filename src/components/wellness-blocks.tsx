@@ -131,16 +131,19 @@ export function WellnessBlocks({ athlete, portalNode }: WellnessBlocksProps) {
             <div className="items-center mb-2">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <p className="font-semibold text-md">
-                            Leading Days
-                        </p>
+                        <p className="font-semibold text-md">Leading Days</p>
                         <Tooltip delayDuration={100}>
                             <TooltipTrigger asChild>
                                 <Info className="h-4 w-4 text-muted-foreground" />
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p className="text-xs">
-                                    Leading days is the number of days before the best competition.<br />Best competition is determined by the lowest % time delta in a competition when compared to best competitor.
+                                <p>
+                                    Leading days is the number of days before
+                                    the best competition.
+                                    <br />
+                                    Best competition is determined by the lowest
+                                    % time delta in a competition when compared
+                                    to best competitor.
                                 </p>
                             </TooltipContent>
                         </Tooltip>
