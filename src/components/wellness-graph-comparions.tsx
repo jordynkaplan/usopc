@@ -1,5 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
-import { useWellnessDataByGender, WellnessData } from "@/data/wellness";
+import {
+    useWellnessDataByGender,
+    WellnessData,
+    sportSpecificTrainingTitleMap,
+} from "@/data/wellness";
 import { useResultsDataByGender } from "@/data/results";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
@@ -15,8 +19,17 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "./ui/chart";
-import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis, ReferenceLine } from "recharts";
+import {
+    CartesianGrid,
+    Legend,
+    Line,
+    LineChart,
+    XAxis,
+    YAxis,
+    ReferenceLine,
+} from "recharts";
 import { MultiSelect } from "./ui/multi-select";
+import { cn } from "@/lib/utils";
 
 export function WellnessGraphComparison({ gender }: { gender: string }) {
     const [selectedMetric, setSelectedMetric] =
@@ -34,6 +47,7 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
         "Sleep Quality",
         "Stress",
         "Travel Hours",
+        "Sport Specific Training Volume",
     ] as (keyof WellnessData)[];
 
     const athletes = useMemo(() => {
@@ -64,7 +78,9 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
         );
         return dates
             .map((date) => {
-                const dataPoint: any = { Date: date };
+                const dataPoint: Record<string, string | number | null> = {
+                    Date: date,
+                };
                 selectedAthletes.forEach((athlete) => {
                     const athleteData = filteredData.find(
                         (d) => d.Date === date && d.Athlete === athlete
@@ -77,7 +93,8 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
             })
             .sort(
                 (a, b) =>
-                    new Date(a.Date).getTime() - new Date(b.Date).getTime()
+                    new Date(a.Date as string).getTime() -
+                    new Date(b.Date as string).getTime()
             );
     }, [wellnessData, selectedAthletes, selectedMetric]);
 
@@ -140,8 +157,104 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="Date" />
-                        <YAxis />
-                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <YAxis
+                            tickFormatter={(value) =>
+                                selectedMetric ===
+                                "Sport Specific Training Volume"
+                                    ? sportSpecificTrainingTitleMap[
+                                          value as keyof typeof sportSpecificTrainingTitleMap
+                                      ] || value
+                                    : value
+                            }
+                            ticks={
+                                selectedMetric ===
+                                "Sport Specific Training Volume"
+                                    ? [0, 1, 2, 3]
+                                    : undefined
+                            }
+                        />
+                        <ChartTooltip
+                            content={
+                                <ChartTooltipContent
+                                    labelFormatter={(value) => {
+                                        return new Date(
+                                            value
+                                        ).toLocaleDateString("en-US", {
+                                            month: "short",
+                                            day: "numeric",
+                                        });
+                                    }}
+                                    formatter={(_value, _name, item) => {
+                                        const indicatorColor =
+                                            item.payload.fill || item.color;
+                                        const indicator = "dot";
+                                        const nestLabel = false;
+                                        const isNan = isNaN(
+                                            item.value as number
+                                        );
+                                        let innerText = isNan
+                                            ? "Not reported"
+                                            : (
+                                                  item.value ?? "Not reported"
+                                              ).toLocaleString();
+
+                                        if (
+                                            selectedMetric ===
+                                                "Sport Specific Training Volume" &&
+                                            !isNan
+                                        ) {
+                                            innerText =
+                                                sportSpecificTrainingTitleMap[
+                                                    item.value as keyof typeof sportSpecificTrainingTitleMap
+                                                ] || innerText;
+                                        }
+
+                                        return (
+                                            <>
+                                                <div
+                                                    className={cn(
+                                                        "shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]",
+                                                        {
+                                                            "h-2.5 w-2.5":
+                                                                indicator ===
+                                                                "dot",
+                                                        }
+                                                    )}
+                                                    style={
+                                                        {
+                                                            "--color-bg":
+                                                                indicatorColor,
+                                                            "--color-border":
+                                                                indicatorColor,
+                                                        } as React.CSSProperties
+                                                    }
+                                                />
+                                                <div
+                                                    className={cn(
+                                                        "flex flex-1 gap-2 justify-between leading-none",
+                                                        nestLabel
+                                                            ? "items-end"
+                                                            : "items-center"
+                                                    )}
+                                                >
+                                                    <div className="grid gap-1.5">
+                                                        <span className="text-muted-foreground">
+                                                            {item.name}
+                                                        </span>
+                                                    </div>
+                                                    {
+                                                        <span className="font-mono font-medium tabular-nums text-foreground">
+                                                            {innerText}
+                                                        </span>
+                                                    }
+                                                </div>
+                                            </>
+                                        );
+                                    }}
+                                    indicator="dot"
+                                />
+                            }
+                        />
                         {selectedAthletes.map((athlete, index) => (
                             <Line
                                 key={athlete}
@@ -162,23 +275,25 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
                             />
                         ))}
                         <Legend
-                         payload={[
-                             ...selectedAthletes.map((athlete, index) => ({
-                                 value: athlete,
-                                 type: "line" as const,
-                                 color: `hsl(var(--chart-${(index % 5) + 1}))`,
-                             })),
-                             {
-                                 value: "Competition Day",
-                                 type: "line" as const,
-                                 color: "#888",
-                             },
-                         ]}
-                         wrapperStyle={{ fontSize: "14px" }}
-                         iconSize={20}
-                         verticalAlign="bottom"
-                         height={36}
-                         />
+                            payload={[
+                                ...selectedAthletes.map((athlete, index) => ({
+                                    value: athlete,
+                                    type: "line" as const,
+                                    color: `hsl(var(--chart-${
+                                        (index % 5) + 1
+                                    }))`,
+                                })),
+                                {
+                                    value: "Competition Day",
+                                    type: "line" as const,
+                                    color: "#888",
+                                },
+                            ]}
+                            wrapperStyle={{ fontSize: "14px" }}
+                            iconSize={20}
+                            verticalAlign="bottom"
+                            height={36}
+                        />
                     </LineChart>
                 </ChartContainer>
             </CardContent>
