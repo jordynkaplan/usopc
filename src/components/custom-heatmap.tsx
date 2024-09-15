@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useResultsDataByGender } from "@/data/results";
 import { useWellnessDataByGender } from "@/data/wellness";
+import { useCorrelationData } from "@/data/correlation";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import {
@@ -31,45 +32,29 @@ import {
     ChartTooltipContent,
 } from "./ui/chart";
 
-type CorrelationData = {
-    columns: string[];
-    index: string[];
-    data: number[][];
-};
-
 export function CustomHeatmap({ gender }: { gender: string }) {
-    const [correlationData, setCorrelationData] =
-        useState<CorrelationData | null>(null);
     const [selectedElement, setSelectedElement] = useState<{
         row: string;
         column: string;
     } | null>(null);
     const { data: resultsData } = useResultsDataByGender(gender);
     const { data: wellnessData } = useWellnessDataByGender(gender);
+    const { correlationData } = useCorrelationData(gender, true);
 
     useEffect(() => {
-        const fetchCorrelationData = async () => {
-            try {
-                const response = await fetch(`/api/corr/${gender}`);
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                const data: CorrelationData = await response.json();
-                setCorrelationData(data);
-                // Set default selected element to top right
-                if (data.index.length > 0 && data.columns.length > 0) {
-                    setSelectedElement({
-                        row: data.index[0],
-                        column: data.columns[data.columns.length - 1],
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching correlation data:", error);
-            }
-        };
-
-        fetchCorrelationData();
-    }, [gender]);
+        if (
+            correlationData &&
+            correlationData.index.length > 0 &&
+            correlationData.columns.length > 0
+        ) {
+            setSelectedElement({
+                row: correlationData.index[0],
+                column: correlationData.columns[
+                    correlationData.columns.length - 1
+                ],
+            });
+        }
+    }, [correlationData]);
 
     const getColor = (value: number) => {
         const intensity = Math.abs(value);
