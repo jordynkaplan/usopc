@@ -32,6 +32,102 @@ import {
     ChartTooltipContent,
 } from "./ui/chart";
 
+const heatmapDetails = {
+    m: {
+        "Percentage Time Delta: Best - Fatigue":
+            "Increased fatigue is moderately associated with faster performance times.",
+        "Percentage Time Delta: Best - Soreness":
+            "Increased soreness is weakly associated with faster performance times.",
+        "Percentage Time Delta: Best - Motivation":
+            "Higher motivation levels are weakly associated with slower performance times.",
+        "Percentage Time Delta: Best - Resting HR":
+            "Higher resting heart rate is moderately associated with faster performance times.",
+        "Percentage Time Delta: Best - Sleep Hours":
+            "More sleep hours are weakly associated with faster performance times.",
+        "Percentage Time Delta: Best - Sleep Quality":
+            "Better sleep quality is weakly associated with slower performance times.",
+        "Percentage Time Delta: Best - Stress":
+            "Higher stress levels are very weakly associated with faster performance times.",
+
+        "Percentage Time Delta: Heat 2 - Fatigue":
+            "Increased fatigue is moderately associated with faster performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Soreness":
+            "Increased soreness is very weakly associated with faster performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Motivation":
+            "Higher motivation levels are weakly associated with slower performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Resting HR":
+            "Higher resting heart rate is moderately associated with faster performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Sleep Hours":
+            "More sleep hours are weakly associated with faster performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Sleep Quality":
+            "Better sleep quality is very weakly associated with slower performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Stress":
+            "Higher stress levels are very weakly associated with faster performance times in Heat 2.",
+
+        "Percentage Time Delta: Heat 1 - Fatigue":
+            "Increased fatigue is moderately associated with faster performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Soreness":
+            "Increased soreness is weakly associated with faster performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Motivation":
+            "Higher motivation levels are weakly associated with slower performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Resting HR":
+            "Higher resting heart rate is weakly associated with faster performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Sleep Hours":
+            "More sleep hours are weakly associated with faster performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Sleep Quality":
+            "Better sleep quality is weakly associated with slower performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Stress":
+            "Higher stress levels are very weakly associated with faster performance times in Heat 1.",
+    },
+
+    f: {
+        "Percentage Time Delta: Best - Fatigue":
+            "Increased fatigue is strongly associated with faster performance times.",
+        "Percentage Time Delta: Best - Soreness":
+            "Increased soreness is weakly associated with slower performance times.",
+        "Percentage Time Delta: Best - Motivation":
+            "Higher motivation levels are strongly associated with faster performance times.",
+        "Percentage Time Delta: Best - Resting HR":
+            "Higher resting heart rate is moderately associated with slower performance times.",
+        "Percentage Time Delta: Best - Sleep Hours":
+            "More sleep hours are strongly associated with slower performance times.",
+        "Percentage Time Delta: Best - Sleep Quality":
+            "Better sleep quality is moderately associated with faster performance times.",
+        "Percentage Time Delta: Best - Stress":
+            "Higher stress levels are strongly associated with slower performance times.",
+
+        "Percentage Time Delta: Heat 2 - Fatigue":
+            "Increased fatigue is moderately associated with faster performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Soreness":
+            "Increased soreness is weakly associated with slower performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Motivation":
+            "Higher motivation levels are moderately associated with faster performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Resting HR":
+            "Resting heart rate shows no significant association with performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Sleep Hours":
+            "More sleep hours are moderately associated with slower performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Sleep Quality":
+            "Better sleep quality is moderately associated with faster performance times in Heat 2.",
+        "Percentage Time Delta: Heat 2 - Stress":
+            "Higher stress levels are weakly associated with slower performance times in Heat 2.",
+
+        "Percentage Time Delta: Heat 1 - Fatigue":
+            "Increased fatigue is moderately associated with faster performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Soreness":
+            "Increased soreness is weakly associated with slower performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Motivation":
+            "Higher motivation levels are strongly associated with faster performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Resting HR":
+            "Higher resting heart rate is strongly associated with slower performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Sleep Hours":
+            "More sleep hours are moderately associated with slower performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Sleep Quality":
+            "Better sleep quality is moderately associated with faster performance times in Heat 1.",
+        "Percentage Time Delta: Heat 1 - Stress":
+            "Higher stress levels are strongly associated with slower performance times in Heat 1.",
+    },
+};
+
 export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
     const [selectedElement, setSelectedElement] = useState<{
         row: string;
@@ -371,12 +467,12 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
                     </div>
                 </CardContent>
                 <CardFooter className="text-center">
-                    <p className="text-sm">
-                        Total Time found increased soreness and higher stress
-                        are associated with longer performance times. Split
-                        Time: Heat 2 found greater fatigue leads to longer split
-                        times, while higher motivation is linked to slightly
-                        better split times.
+                    <p className="text-sm text-center mx-auto">
+                        {selectedElement?.row && selectedElement?.column
+                            ? heatmapDetails[gender][
+                                  `${selectedElement.row} - ${selectedElement.column}` as keyof (typeof heatmapDetails)[typeof gender]
+                              ]
+                            : "Select an element from the heatmap"}
                     </p>
                 </CardFooter>
             </Card>
