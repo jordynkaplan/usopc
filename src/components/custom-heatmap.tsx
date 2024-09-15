@@ -492,7 +492,7 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div style={{ width: "100%", height: 400 }}>
+                    <div>
                         <ChartContainer config={chartConfig}>
                             <ComposedChart
                                 data={getScatterData()}
