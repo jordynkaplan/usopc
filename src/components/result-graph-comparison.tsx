@@ -76,7 +76,7 @@ export default function ResultGraphComparison({
             (result) => result["Competition ID"] === +selectedCompetition
         );
 
-        const heat1Data: { [key: string]: number | string } = {
+        const heat1Data: { [key: string]: number | string | null } = {
             name: "Heat 1",
             best: Math.min(
                 ...competitionResults.map(
@@ -85,7 +85,7 @@ export default function ResultGraphComparison({
             ),
         };
 
-        const heat2Data: { [key: string]: number | string } = {
+        const heat2Data: { [key: string]: number | string | null } = {
             name: "Heat 2",
             best: Math.min(
                 ...competitionResults.map(

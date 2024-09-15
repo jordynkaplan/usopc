@@ -85,9 +85,14 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
                     const athleteData = filteredData.find(
                         (d) => d.Date === date && d.Athlete === athlete
                     );
-                    dataPoint[athlete] = athleteData
-                        ? athleteData[selectedMetric]
-                        : null;
+
+                    if (!athleteData) {
+                        dataPoint[athlete] = null;
+                    } else {
+                        dataPoint[athlete] = athleteData[selectedMetric] as
+                            | number
+                            | null;
+                    }
                 });
                 return dataPoint;
             })
