@@ -14,7 +14,7 @@ export interface WellnessData {
     "Sleep Quality": number;
     Stress: number;
     "Travel Hours": number;
-    "Sport Specific Training Volume": number;
+    "Sport Specific Training Volume": string;
 }
 
 const fetchWellnessLoadData = async (): Promise<WellnessData[]> => {
