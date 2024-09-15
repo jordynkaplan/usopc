@@ -124,7 +124,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {athlete.Date}
+                                                    <span className="font-mono">{athlete.Date}</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -145,10 +145,10 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {athlete["Rank: Athlete"]}
+                                                    <span className="font-mono">{athlete["Rank: Athlete"]}</span>
                                                 </TableCell>
                                                 <TableCell
-                                                    className={`font-medium text-right ${
+                                                    className={`text-right ${
                                                         athlete[
                                                             "Time: Athlete"
                                                         ] === null
@@ -156,7 +156,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {athlete["Time: Athlete"]}
+                                                    <span className="font-mono">{athlete["Time: Athlete"]?.toFixed(2)}s</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -167,11 +167,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Time Delta: Best"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">{athlete["Time Delta: Best"]?.toFixed(2)}s</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -182,11 +178,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Time: Athlete Heat 1"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">{athlete["Time: Athlete Heat 1"]?.toFixed(2)}s</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -197,11 +189,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Time Delta: Heat 1"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">{athlete["Time Delta: Heat 1"]?.toFixed(2)}s</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -212,11 +200,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Split Time: Athlete Heat 1"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">{athlete["Split Time: Athlete Heat 1"]?.toFixed(2)}s</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -237,11 +221,13 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Split Rank: Athlete Heat 1"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">
+                                                        {
+                                                            athlete[
+                                                                "Split Rank: Athlete Heat 1"
+                                                            ]
+                                                        }
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -252,11 +238,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Time: Athlete Heat 2"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">{athlete["Time: Athlete Heat 2"]?.toFixed(2)}s</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -267,11 +249,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Time Delta: Heat 2"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">{athlete["Time Delta: Heat 2"]?.toFixed(2)}s</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -282,11 +260,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Split Time: Athlete Heat 2"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">{athlete["Split Time: Athlete Heat 2"]?.toFixed(2)}s</span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -307,11 +281,13 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {
-                                                        athlete[
-                                                            "Split Rank: Athlete Heat 2"
-                                                        ]
-                                                    }
+                                                    <span className="font-mono">
+                                                        {
+                                                            athlete[
+                                                                "Split Rank: Athlete Heat 2"
+                                                            ]
+                                                        }
+                                                    </span>
                                                 </TableCell>
                                             </TableRow>
                                         );

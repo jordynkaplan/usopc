@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useResultsDataByAthlete } from "@/data/results";
+import { Badge } from "./ui/badge";
 
 export function ResultsCards({ athlete }: { athlete: string | null }) {
     const { data: athleteResults } = useResultsDataByAthlete(athlete);
@@ -7,7 +8,23 @@ export function ResultsCards({ athlete }: { athlete: string | null }) {
     const totalCompetitions = athleteResults?.length || 0;
     const timeDeltaBest = athleteResults
         ? Math.min(
-              ...athleteResults.map((r) => r["Time Delta: Best"] || Infinity)
+              ...athleteResults.map(
+                  (r) => r["Percentage Time Delta: Best"] || Infinity
+              )
+          )
+        : 0;
+    const timeDeltaHeat1 = athleteResults
+        ? Math.min(
+              ...athleteResults.map(
+                  (r) => r["Percentage Time Delta: Heat 1"] || Infinity
+              )
+          )
+        : 0;
+    const timeDeltaHeat2 = athleteResults
+        ? Math.min(
+              ...athleteResults.map(
+                  (r) => r["Percentage Time Delta: Heat 2"] || Infinity
+              )
           )
         : 0;
     const highestRank = athleteResults
@@ -45,28 +62,38 @@ export function ResultsCards({ athlete }: { athlete: string | null }) {
                         </p>
                     </CardContent>
                 </Card>
-                <Card className="flex-1">
+                <Card className="flex-1 whitespace-nowrap">
                     <CardContent className="flex flex-col items-center p-6 justify-center h-full">
-                        <p className="text-center">Seconds from Best Time</p>
-                        <p className="font-bold text-3xl">
-                            {timeDeltaBest.toFixed(2)}
-                        </p>
+                        <div className="flex flex-col items-center gap-2">
+                            <Badge variant="secondary">Total Time</Badge>
+
+                            <p className="text-center">Lowest Delta from Leader</p>
+                            <p className="font-bold text-3xl">
+                                {timeDeltaBest.toFixed(2)}%
+                            </p>
+                        </div>
                     </CardContent>
                 </Card>
-                <Card className="flex-1">
+                <Card className="flex-1 whitespace-nowrap">
                     <CardContent className="flex flex-col items-center p-6 justify-center h-full">
-                        <p className="text-center">
-                            Best % off Best Heat 1 Time
-                        </p>
-                        {/* <p className="font-bold text-3xl">{averageRank.toFixed(2)}</p> */}
+                        <div className="flex flex-col items-center gap-2">
+                            <Badge variant="secondary">Heat 1</Badge>
+                            <p className="text-center">Lowest Delta from Leader</p>
+                            <p className="font-bold text-3xl">
+                                {timeDeltaHeat1.toFixed(2)}%
+                            </p>
+                        </div>
                     </CardContent>
                 </Card>
-                <Card className="flex-1">
+                <Card className="flex-1 whitespace-nowrap">
                     <CardContent className="flex flex-col items-center p-6 justify-center h-full">
-                        <p className="text-center">
-                            Best % off Best Heat 2 Time
-                        </p>
-                        {/* <p className="font-bold text-3xl">{averageRank.toFixed(2)}</p> */}
+                        <div className="flex flex-col items-center gap-2">
+                            <Badge variant="secondary">Heat 2</Badge>
+                            <p className="text-center">Lowest Delta from Leader</p>
+                            <p className="font-bold text-3xl">
+                                {timeDeltaHeat2.toFixed(2)}%
+                            </p>
+                        </div>
                     </CardContent>
                 </Card>
             </div>

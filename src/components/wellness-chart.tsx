@@ -1,20 +1,3 @@
-import { ResultsData, useResultsDataByAthlete } from "@/data/results";
-import {
-    useWellnessLoadDataByAthlete,
-    WellnessData,
-    sportSpecificTrainingTitleMap,
-} from "@/data/wellness";
-import { cn, removeUndefinedOrNull, uniqueValues } from "@/lib/utils";
-import { useMemo, useState } from "react";
-import {
-    CartesianGrid,
-    Legend,
-    Line,
-    LineChart,
-    ReferenceLine,
-    XAxis,
-    YAxis,
-} from "recharts";
 import {
     Card,
     CardContent,
@@ -29,17 +12,32 @@ import {
     ChartTooltipContent,
 } from "./ui/chart";
 import {
+    CartesianGrid,
+    Legend,
+    Line,
+    LineChart,
+    ReferenceLine,
+    XAxis,
+    YAxis,
+} from "recharts";
+import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from "./ui/select";
+import { useState, useMemo } from "react";
+import { cn, removeUndefinedOrNull, uniqueValues } from "@/lib/utils";
+import { ResultsData, useResultsDataByAthlete } from "@/data/results";
+import { useWellnessLoadDataByAthlete, WellnessData } from "@/data/wellness";
 
 interface WellnessChartProps {
     athlete?: string | null;
     className?: string;
 }
+
+export const lineColors = ["#b22233"];
 
 function useCleanedWellnessData(
     wellnessData: WellnessData[] | undefined,
@@ -95,12 +93,32 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         wellnessData,
         selectedMetric
     );
+    console.log({ cleanedWellnessData });
     const { data: athleteResults } = useResultsDataByAthlete(athlete);
+    const fastestTime = useMemo(() => {
+        if (!athleteResults) return null;
+        return Math.min(
+            ...athleteResults
+                .map((result) => Number(result["Time: Athlete"]))
+                .filter((time) => !!time)
+        );
+    }, [athleteResults]);
 
-    const bestPercentTimeDelta = useMemo(() => {
+    const highestRankDates = useMemo(() => {
+        if (!athleteResults) return [];
+        const ranks = athleteResults
+            .map((result) => Number(result["Rank: Athlete"]))
+            .filter((rank) => !isNaN(rank));
+        const highestRank = Math.min(...ranks);
+        return athleteResults
+            .filter((result) => Number(result["Rank: Athlete"]) === highestRank)
+            .map((result) => result.Date);
+    }, [athleteResults]);
+
+    const bestTimeDelta = useMemo(() => {
         if (!athleteResults) return null;
         const timeDeltaBest = athleteResults
-            .map((result) => Number(result["Percentage Time Delta: Best"]))
+            .map((result) => Number(result["Time Delta: Best"]))
             .filter((delta) => !isNaN(delta));
         return Math.min(...timeDeltaBest);
     }, [athleteResults]);
@@ -111,6 +129,8 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         selectedMetric,
     });
 
+    console.log({ filledWellnessData });
+
     const chartData = useMemo(() => {
         filledWellnessData.sort((a, b) => {
             return new Date(a.Date).getTime() - new Date(b.Date).getTime();
@@ -118,14 +138,13 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
 
         return filledWellnessData;
     }, [filledWellnessData]);
-    console.log({ chartData });
     const yAxisDomain = useMemo(() => {
         const values = filledWellnessData.map(
             (entry) => +(entry[selectedMetric] ?? 0)
         );
         const min = Math.min(...values);
         const max = Math.max(...values);
-        return [min, max * 1.1];
+        return [min, max];
     }, [filledWellnessData, selectedMetric]);
 
     const chartConfig = {
@@ -144,7 +163,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         "Sleep Quality",
         "Stress",
         "Travel Hours",
-        "Sport Specific Training Volume",
+        "Sport Specific Training Volume"
     ] as (keyof WellnessData)[];
 
     return (
@@ -199,23 +218,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 });
                             }}
                         />
-                        <YAxis
-                            domain={yAxisDomain}
-                            tickFormatter={(value) =>
-                                selectedMetric ===
-                                "Sport Specific Training Volume"
-                                    ? sportSpecificTrainingTitleMap[
-                                          value as keyof typeof sportSpecificTrainingTitleMap
-                                      ] || value
-                                    : value
-                            }
-                            ticks={
-                                selectedMetric ===
-                                "Sport Specific Training Volume"
-                                    ? [0, 1, 2, 3]
-                                    : undefined
-                            }
-                        />
+                        <YAxis domain={yAxisDomain} />
                         <ChartTooltip
                             cursor={false}
                             content={
@@ -236,22 +239,11 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                         const isNan = isNaN(
                                             item.value as number
                                         );
-                                        let innerText = isNan
+                                        const innerText = isNan
                                             ? "Not reported"
                                             : (
                                                   item.value ?? "Not reported"
                                               ).toLocaleString();
-
-                                        if (
-                                            selectedMetric ===
-                                                "Sport Specific Training Volume" &&
-                                            !isNan
-                                        ) {
-                                            innerText =
-                                                sportSpecificTrainingTitleMap[
-                                                    item.value as keyof typeof sportSpecificTrainingTitleMap
-                                                ] || innerText;
-                                        }
 
                                         return (
                                             <>
@@ -313,9 +305,15 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     payload: { strokeDasharray: "3 3" },
                                 },
                                 {
-                                    value: "Best % Time Delta",
+                                    value: "Highest Rank Competition(s)",
                                     type: "line",
                                     color: "#4CAF50",
+                                    payload: { strokeDasharray: "5 5" },
+                                },
+                                {
+                                    value: "Best Time Delta",
+                                    type: "line",
+                                    color: "#4b90ad",
                                     payload: { strokeDasharray: "5 5" },
                                 },
                             ]}
@@ -330,7 +328,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 connectNulls
                                 dataKey={`${selectedMetric}`}
                                 type="bump"
-                                stroke={"#b22233"}
+                                stroke={lineColors[0]}
                                 strokeWidth={2}
                                 activeDot={{ r: 8 }}
                             />
@@ -341,9 +339,9 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     key={`result-${index}`}
                                     x={result.Date}
                                     stroke={
-                                        bestPercentTimeDelta ===
-                                        result["Percentage Time Delta: Best"]
-                                            ? "#4CAF50"
+                                        bestTimeDelta ===
+                                        Number(result["Time Delta: Best"])
+                                            ? "#4b90ad"
                                             : "#888"
                                     }
                                     strokeWidth={3}
@@ -361,6 +359,23 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 />
                             );
                         })}
+                        {highestRankDates.map((date, index) => (
+                            <ReferenceLine
+                                key={`highest-rank-${index}`}
+                                x={date}
+                                stroke="#4CAF50"
+                                strokeWidth={3}
+                                strokeDasharray="5 5"
+                                label={{
+                                    value: "Highest Rank",
+                                    position: "top",
+                                    fill: "#4CAF50",
+                                    fontSize: 12,
+                                    fontWeight: "bold",
+                                    offset: 10 + index * 15,
+                                }}
+                            />
+                        ))}
                     </LineChart>
                 </ChartContainer>
             </CardContent>
