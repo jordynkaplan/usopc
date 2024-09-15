@@ -19,6 +19,9 @@ export interface ResultsData {
     "Time Delta: Best": number;
     "Time Delta: Heat 1": number;
     "Time Delta: Heat 2": number;
+    "Percentage Time Delta: Best": number;
+    "Percentage Time Delta: Heat 1": number;
+    "Percentage Time Delta: Heat 2": number;
     "Competition ID": number;
 }
 

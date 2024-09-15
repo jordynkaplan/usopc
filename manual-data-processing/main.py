@@ -12,6 +12,10 @@ results_df = pd.read_csv(results_path)
 results_df['Time Delta: Best'] = (results_df['Time: Athlete'] - results_df['Time: Best']).round(2)
 results_df['Time Delta: Heat 1'] = (results_df['Time: Athlete Heat 1'] - results_df['Time: Best Heat 1']).round(2)
 results_df['Time Delta: Heat 2'] = (results_df['Time: Athlete Heat 2'] - results_df['Time: Best Heat 2']).round(2)
+# Compute Percentage Time Delta columns
+results_df['Percentage Time Delta: Best'] = (results_df['Time Delta: Best'] / results_df['Time: Best'] * 100).round(2)
+results_df['Percentage Time Delta: Heat 1'] = (results_df['Time Delta: Heat 1'] / results_df['Time: Best Heat 1'] * 100).round(2)
+results_df['Percentage Time Delta: Heat 2'] = (results_df['Time Delta: Heat 2'] / results_df['Time: Best Heat 2'] * 100).round(2)
 
 # Generate a computed competition id column
 results_df['Competition ID'] = results_df.groupby(['Date', 'Time: Best', 'Time: Best Heat 1', 'Time: Best Heat 2', 'Event']).ngroup()

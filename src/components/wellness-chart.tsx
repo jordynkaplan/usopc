@@ -1,3 +1,16 @@
+import { ResultsData, useResultsDataByAthlete } from "@/data/results";
+import { useWellnessLoadDataByAthlete, WellnessData } from "@/data/wellness";
+import { cn, removeUndefinedOrNull, uniqueValues } from "@/lib/utils";
+import { useMemo, useState } from "react";
+import {
+    CartesianGrid,
+    Legend,
+    Line,
+    LineChart,
+    ReferenceLine,
+    XAxis,
+    YAxis,
+} from "recharts";
 import {
     Card,
     CardContent,
@@ -12,32 +25,17 @@ import {
     ChartTooltipContent,
 } from "./ui/chart";
 import {
-    CartesianGrid,
-    Legend,
-    Line,
-    LineChart,
-    ReferenceLine,
-    XAxis,
-    YAxis,
-} from "recharts";
-import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from "./ui/select";
-import { useState, useMemo } from "react";
-import { cn, removeUndefinedOrNull, uniqueValues } from "@/lib/utils";
-import { ResultsData, useResultsDataByAthlete } from "@/data/results";
-import { useWellnessLoadDataByAthlete, WellnessData } from "@/data/wellness";
 
 interface WellnessChartProps {
     athlete?: string | null;
     className?: string;
 }
-
-export const lineColors = ["#b22233"];
 
 function useCleanedWellnessData(
     wellnessData: WellnessData[] | undefined,
@@ -93,32 +91,12 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         wellnessData,
         selectedMetric
     );
-    console.log({ cleanedWellnessData });
     const { data: athleteResults } = useResultsDataByAthlete(athlete);
-    const fastestTime = useMemo(() => {
-        if (!athleteResults) return null;
-        return Math.min(
-            ...athleteResults
-                .map((result) => Number(result["Time: Athlete"]))
-                .filter((time) => !!time)
-        );
-    }, [athleteResults]);
 
-    const highestRankDates = useMemo(() => {
-        if (!athleteResults) return [];
-        const ranks = athleteResults
-            .map((result) => Number(result["Rank: Athlete"]))
-            .filter((rank) => !isNaN(rank));
-        const highestRank = Math.min(...ranks);
-        return athleteResults
-            .filter((result) => Number(result["Rank: Athlete"]) === highestRank)
-            .map((result) => result.Date);
-    }, [athleteResults]);
-
-    const bestTimeDelta = useMemo(() => {
+    const bestPercentTimeDelta = useMemo(() => {
         if (!athleteResults) return null;
         const timeDeltaBest = athleteResults
-            .map((result) => Number(result["Time Delta: Best"]))
+            .map((result) => Number(result["Percentage Time Delta: Best"]))
             .filter((delta) => !isNaN(delta));
         return Math.min(...timeDeltaBest);
     }, [athleteResults]);
@@ -128,8 +106,6 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         athleteResults,
         selectedMetric,
     });
-
-    console.log({ filledWellnessData });
 
     const chartData = useMemo(() => {
         filledWellnessData.sort((a, b) => {
@@ -304,15 +280,9 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     payload: { strokeDasharray: "3 3" },
                                 },
                                 {
-                                    value: "Highest Rank Competition(s)",
+                                    value: "Best % Time Delta",
                                     type: "line",
                                     color: "#4CAF50",
-                                    payload: { strokeDasharray: "5 5" },
-                                },
-                                {
-                                    value: "Best Time Delta",
-                                    type: "line",
-                                    color: "#4b90ad",
                                     payload: { strokeDasharray: "5 5" },
                                 },
                             ]}
@@ -327,7 +297,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 connectNulls
                                 dataKey={`${selectedMetric}`}
                                 type="bump"
-                                stroke={lineColors[0]}
+                                stroke={"#b22233"}
                                 strokeWidth={2}
                                 activeDot={{ r: 8 }}
                             />
@@ -338,9 +308,9 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     key={`result-${index}`}
                                     x={result.Date}
                                     stroke={
-                                        bestTimeDelta ===
-                                        Number(result["Time Delta: Best"])
-                                            ? "#4b90ad"
+                                        bestPercentTimeDelta ===
+                                        result["Percentage Time Delta: Best"]
+                                            ? "#4CAF50"
                                             : "#888"
                                     }
                                     strokeWidth={3}
@@ -358,23 +328,6 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 />
                             );
                         })}
-                        {highestRankDates.map((date, index) => (
-                            <ReferenceLine
-                                key={`highest-rank-${index}`}
-                                x={date}
-                                stroke="#4CAF50"
-                                strokeWidth={3}
-                                strokeDasharray="5 5"
-                                label={{
-                                    value: "Highest Rank",
-                                    position: "top",
-                                    fill: "#4CAF50",
-                                    fontSize: 12,
-                                    fontWeight: "bold",
-                                    offset: 10 + index * 15,
-                                }}
-                            />
-                        ))}
                     </LineChart>
                 </ChartContainer>
             </CardContent>
