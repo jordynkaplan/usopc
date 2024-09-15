@@ -178,6 +178,8 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                     yValue = result["Time Delta: Best"];
                 } else if (selectedElement.row === "Time Delta: Heat 2") {
                     yValue = result["Time Delta: Heat 2"];
+                } else if (selectedElement.row === "Time Delta: Heat 1") {
+                    yValue = result["Time Delta: Heat 1"];
                 }
 
                 if (yValue === null || yValue === undefined) return null;
@@ -230,8 +232,8 @@ export function CustomHeatmap({ gender }: { gender: string }) {
             <Card className="flex-1 mb-4 lg:mb-0 lg:mr-4 basis-1/3">
                 <CardHeader>
                     <CardTitle className="text-center">
-                        Total Time and Split Time: Heat 2 - Wellness Correlation
-                        Map
+                        Total Time and Split Time: Heat 1 & 2 - Wellness
+                        Correlation Map
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
