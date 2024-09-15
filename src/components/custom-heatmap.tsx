@@ -308,6 +308,12 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
         },
     } satisfies ChartConfig;
 
+    const getXAxisUnit = (column: string) => {
+        if (column === "Resting HR") return "bpm";
+        if (column === "Sleep Hours") return "hrs";
+        return "";
+    };
+
     return (
         <div className="flex flex-col lg:flex-row">
             <Card className="flex-1 mb-4 lg:mb-0 lg:mr-4 basis-1/3">
@@ -502,8 +508,15 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
                                     type="number"
                                     dataKey="x"
                                     name={selectedElement?.column}
-                                    unit="s"
-                                    domain={["dataMin", "dataMax"]}
+                                    unit={getXAxisUnit(
+                                        selectedElement?.column as string
+                                    )}
+                                    domain={[
+                                        selectedElement?.column === "Resting HR"
+                                            ? 45
+                                            : 0,
+                                        "dataMax",
+                                    ]}
                                     label={{
                                         value: selectedElement?.column,
                                         position: "bottom",
