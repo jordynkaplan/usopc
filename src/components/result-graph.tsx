@@ -239,6 +239,7 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
                             <Area
                                 type="monotone"
                                 dataKey="best"
+                                name="Best Time"
                                 stackId="1"
                                 stroke={chartConfig.best.color}
                                 fill="none"
@@ -248,6 +249,7 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
                             <Area
                                 type="monotone"
                                 dataKey="timeDifference"
+                                name="Time Difference"
                                 stackId="1"
                                 stroke={chartConfig.timeDifference.color}
                                 fill="url(#fillTimeDifference)"
