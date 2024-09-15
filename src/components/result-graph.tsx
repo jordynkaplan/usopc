@@ -119,6 +119,7 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
                         <div className="flex items-center gap-2">
                             <span>Heat 1:</span>
                             <Badge
+                                className="dark:text-background"
                                 variant={
                                     chartData[0]?.timeDifference > 0
                                         ? "destructive"
@@ -132,6 +133,7 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
                         <div className="flex items-center gap-2">
                             <span>Heat 2:</span>
                             <Badge
+                                className="dark:text-background"
                                 variant={
                                     chartData[1]?.timeDifference > 0
                                         ? "destructive"
