@@ -40,6 +40,21 @@ export function useResultsData() {
     });
 }
 
+export function useResultsDataByGender(gender?: string) {
+    return useQuery<ResultsData[], Error>({
+        queryKey: ["resultsDataByGender", gender],
+        queryFn: () => {
+            const genderKey = gender === "m" ? "Men's" : "Women's";
+            console.log({ genderKey });
+
+            return fetchResultsData().then((data) =>
+                data.filter((entry) => entry.Event?.startsWith(genderKey || ""))
+            );
+        },
+        enabled: !!gender,
+    });
+}
+
 export function useResultsDataByAthlete(athlete?: string | null) {
     return useQuery<ResultsData[], Error>({
         queryKey: ["resultsDataByAthlete", athlete],
@@ -62,15 +77,4 @@ export function getBestResult(results?: ResultsData[]) {
         const minTime = parseFloat(min["Time: Athlete"]);
         return currentTime < minTime ? result : min;
     }, results[0]);
-}
-
-export function useResultsDataByGender(gender?: string) {
-    return useQuery<ResultsData[], Error>({
-        queryKey: ["resultsDataByGender", gender],
-        queryFn: () =>
-            fetchResultsData().then((data) =>
-                data.filter((entry) => entry.Event.startsWith(gender || ""))
-            ),
-        enabled: !!gender,
-    });
 }

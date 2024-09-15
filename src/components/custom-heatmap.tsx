@@ -13,8 +13,8 @@ import {
     CardTitle,
 } from "./ui/card";
 import { useEffect, useState } from "react";
-import { useResultsData } from "@/data/results";
-import { useWellnessLoadData } from "@/data/wellness";
+import { useResultsData, useResultsDataByGender } from "@/data/results";
+import { useWellnessDataByGender, useWellnessLoadData } from "@/data/wellness";
 import {
     ScatterChart,
     Scatter,
@@ -40,8 +40,8 @@ export function CustomHeatmap({ gender }: { gender: string }) {
         row: string;
         column: string;
     } | null>(null);
-    const { data: resultsData } = useResultsData();
-    const { data: wellnessData } = useWellnessLoadData();
+    const { data: resultsData } = useResultsDataByGender(gender);
+    const { data: wellnessData } = useWellnessDataByGender(gender);
 
     useEffect(() => {
         const fetchCorrelationData = async () => {
