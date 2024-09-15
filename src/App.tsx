@@ -15,7 +15,7 @@ function App() {
                 <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                     <div className="bg-muted/40">
                         <Header></Header>
-                        <div className="p-4">
+                        <div className="p-4 max-w-screen-2xl mx-auto">
                             <Router>
                                 <Routes>
                                     <Route path="/" element={<Athlete />} />
