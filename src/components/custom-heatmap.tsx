@@ -16,7 +16,6 @@ import {
     Scatter,
     XAxis,
     YAxis,
-    ResponsiveContainer,
 } from "recharts";
 import { Button } from "./ui/button";
 import {
