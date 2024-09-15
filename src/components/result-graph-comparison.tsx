@@ -135,8 +135,8 @@ export default function ResultGraphComparison({
 
         const athletesInChart = selectedAthletes.filter(
             (athlete) =>
-                chartData[0][athlete] !== undefined ||
-                chartData[1][athlete] !== undefined
+                chartData[0]?.[athlete] !== undefined ||
+                chartData[1]?.[athlete] !== undefined
         );
 
         athletesInChart.forEach((athlete, index) => {
