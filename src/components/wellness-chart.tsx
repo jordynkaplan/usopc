@@ -120,7 +120,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         );
         const min = Math.min(...values);
         const max = Math.max(...values);
-        return [min, max];
+        return [min, max * 1.1];
     }, [filledWellnessData, selectedMetric]);
 
     const chartConfig = {
