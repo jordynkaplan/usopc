@@ -6,7 +6,7 @@ type CorrelationData = {
     data: number[][];
 };
 
-const cachedCorrelationData = {
+const cachedMaleCorrelationData = {
     columns: [
         "Fatigue",
         "Soreness",
@@ -16,25 +16,60 @@ const cachedCorrelationData = {
         "Sleep Quality",
         "Stress",
     ],
-    index: ["Time Delta: Best", "Time Delta: Heat 2", "Time Delta: Heat 1"],
+    index: [
+        "Percentage Time Delta: Best",
+        "Percentage Time Delta: Heat 2",
+        "Percentage Time Delta: Heat 1",
+    ],
     data: [
         [
-            -0.3595656706, -0.1745344774, 0.1864559214, -0.2579379639,
-            -0.2655484218, 0.1621728389, -0.0287879259,
+            -0.3789438896, -0.1811082117, 0.1932912075, -0.3007379299,
+            -0.2406907311, 0.2027165718, -0.0939638352,
         ],
         [
-            -0.3265456924, -0.0887369852, 0.1196323758, -0.308877168,
-            -0.295458406, 0.0451021545, 0.0202084021,
+            -0.3424711287, -0.0938457923, 0.1198377144, -0.3427892647,
+            -0.2757009355, 0.0739520813, -0.0400443954,
         ],
         [
-            -0.3106559017, -0.1981070161, 0.2193935054, -0.1256934603,
-            -0.1467007027, 0.2512107319, -0.0519623951,
+            -0.3257204471, -0.2014199935, 0.2298868596, -0.1614794226,
+            -0.1182042438, 0.2944914103, -0.1085442965,
+        ],
+    ],
+};
+
+const cachedFemaleCorrelationData = {
+    columns: [
+        "Fatigue",
+        "Soreness",
+        "Motivation",
+        "Resting HR",
+        "Sleep Hours",
+        "Sleep Quality",
+        "Stress",
+    ],
+    index: [
+        "Percentage Time Delta: Best",
+        "Percentage Time Delta: Heat 2",
+        "Percentage Time Delta: Heat 1",
+    ],
+    data: [
+        [
+            -0.6416790975, 0.2925715951, -0.6844831985, 0.4895090329,
+            0.6471436139, -0.4623537486, 0.6740889048,
+        ],
+        [
+            -0.5288874389, 0.1582725272, -0.4451729936, -0.010927879,
+            0.5344447802, -0.327130642, 0.3783003504,
+        ],
+        [
+            -0.4699364564, 0.2869554443, -0.6946582024, 0.7776727283,
+            0.5082496877, -0.4839364726, 0.7293246463,
         ],
     ],
 };
 
 export function useCorrelationData(
-    gender: string,
+    gender: "m" | "f",
     useCachedData: boolean = false
 ) {
     const [correlationData, setCorrelationData] =
@@ -43,7 +78,11 @@ export function useCorrelationData(
     useEffect(() => {
         const fetchCorrelationData = async () => {
             if (useCachedData) {
-                setCorrelationData(cachedCorrelationData);
+                setCorrelationData(
+                    gender === "m"
+                        ? cachedMaleCorrelationData
+                        : cachedFemaleCorrelationData
+                );
                 return;
             }
 

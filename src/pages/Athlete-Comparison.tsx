@@ -14,7 +14,7 @@ import { useWellnessDataByGender } from "@/data/wellness";
 import { useState, useEffect } from "react";
 
 export function AthleteComparison() {
-    const [selectedGender, setSelectedGender] = useState<string>("m");
+    const [selectedGender, setSelectedGender] = useState<"m" | "f">("m");
     const { data: genderData } = useWellnessDataByGender(
         selectedGender || undefined
     );
@@ -29,8 +29,8 @@ export function AthleteComparison() {
                         <p className="font-semibold text-xl">Select Gender:</p>
                         <Select
                             value={selectedGender || undefined}
-                            onValueChange={(value: string) => {
-                                setSelectedGender(value);
+                            onValueChange={(value: "m" | "f") => {
+                                setSelectedGender(value as "m" | "f");
                             }}
                         >
                             <SelectTrigger className="w-[180px]">

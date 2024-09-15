@@ -32,7 +32,7 @@ import {
     ChartTooltipContent,
 } from "./ui/chart";
 
-export function CustomHeatmap({ gender }: { gender: string }) {
+export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
     const [selectedElement, setSelectedElement] = useState<{
         row: string;
         column: string;
@@ -159,12 +159,12 @@ export function CustomHeatmap({ gender }: { gender: string }) {
 
                 let yValue;
 
-                if (selectedElement.row === "Time Delta: Best") {
-                    yValue = result["Time Delta: Best"];
-                } else if (selectedElement.row === "Time Delta: Heat 2") {
-                    yValue = result["Time Delta: Heat 2"];
-                } else if (selectedElement.row === "Time Delta: Heat 1") {
-                    yValue = result["Time Delta: Heat 1"];
+                if (
+                    selectedElement.row === "Percentage Time Delta: Best" ||
+                    selectedElement.row === "Percentage Time Delta: Heat 2" ||
+                    selectedElement.row === "Percentage Time Delta: Heat 1"
+                ) {
+                    yValue = result[selectedElement.row];
                 }
 
                 if (yValue === null || yValue === undefined) return null;

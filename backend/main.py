@@ -22,7 +22,7 @@ merged_df = pd.merge(results_df, wellness_df, on=["Athlete", "Date"])
 merged_df["Resting HR"] = merged_df["Resting HR"].apply(lambda x: np.nan if np.abs(x - merged_df["Resting HR"].mean()) > 3 * merged_df["Resting HR"].std() else x)
 
 # Calculate correlation between performance metrics and wellness factors
-performance_metrics = ["Time Delta: Best", "Time Delta: Heat 2", "Time Delta: Heat 1"]
+performance_metrics = ["Percentage Time Delta: Best", "Percentage Time Delta: Heat 2", "Percentage Time Delta: Heat 1"]
 wellness_factors = [
     "Fatigue",
     "Soreness",
