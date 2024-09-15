@@ -329,7 +329,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 type="bump"
                                 stroke={lineColors[0]}
                                 strokeWidth={2}
-                                dot={false}
+                                activeDot={{ r: 8 }}
                             />
                         )}
                         {athleteResults?.map((result, index) => {

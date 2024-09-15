@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
   Select,
@@ -34,6 +34,12 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
     if (!athleteResults) return [];
     return [...new Set(athleteResults.map(result => result.Date))];
   }, [athleteResults]);
+
+  useEffect(() => {
+    if (dates.length > 0 && !selectedDate) {
+      setSelectedDate(dates[0]);
+    }
+  }, [dates, selectedDate]);
 
   const chartData = useMemo(() => {
     if (!athleteResults || !selectedDate) return [];

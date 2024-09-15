@@ -19,6 +19,7 @@ export interface ResultsData {
     "Time Delta: Best": number;
     "Time Delta: Heat 1": number;
     "Time Delta: Heat 2": number;
+    "Competition ID": number;
 }
 
 const fetchResultsData = async (): Promise<ResultsData[]> => {
@@ -78,4 +79,38 @@ export function getBestResult(results?: ResultsData[]) {
         const minTime = parseFloat(min["Time: Athlete"]);
         return currentTime < minTime ? result : min;
     }, results[0]);
+}
+
+type Competition = {
+    competitionId: number;
+    date: string;
+    timeBest: number;
+    timeBestHeat1: number;
+    timeBestHeat2: number;
+    event: string;
+}
+
+export function getAvailableCompetitions(results?: ResultsData[]): Competition[] {
+    if (!results || results.length === 0) {
+        return [];
+    }
+
+    const uniqueCompetitions = new Map();
+
+    // Remove competitions with no competition id (missing heat times cannot guarantee a unique competition id)
+    results.filter((result) => !!result["Competition ID"]).forEach((result) => {
+        const key = `${result["Competition ID"]}-${result["Date"]}`;
+        if (!uniqueCompetitions.has(key)) {
+            uniqueCompetitions.set(key, {
+                competitionId: result["Competition ID"],
+                date: result["Date"],
+                timeBest: result["Time: Best"],
+                timeBestHeat1: result["Time: Best Heat 1"],
+                timeBestHeat2: result["Time: Best Heat 2"],
+                event: result["Event"]
+            });
+        }
+    });
+
+    return Array.from(uniqueCompetitions.values()) as Competition[];
 }

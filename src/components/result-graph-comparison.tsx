@@ -1,147 +1,385 @@
 import { useState, useMemo, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from "recharts";
-import { useResultsDataByGender } from "@/data/results";
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "./ui/card";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "./ui/select";
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+} from "recharts";
+import {
+    useResultsDataByGender,
+    ResultsData,
+    getAvailableCompetitions,
+} from "@/data/results";
 import { ChartContainer, ChartTooltipContent, ChartConfig } from "./ui/chart";
 import { MultiSelect } from "./ui/multi-select";
 
-export default function ResultGraphComparison({ gender }: { gender: string | undefined }) {
-  const { data: resultsData } = useResultsDataByGender(gender);
-  const [selectedCompetition, setSelectedCompetition] = useState<string | null>(null);
-  const [selectedAthletes, setSelectedAthletes] = useState<string[]>([]);
+export default function ResultGraphComparison({
+    gender,
+}: {
+    gender: string | undefined;
+}) {
+    const { data: resultsData } = useResultsDataByGender(gender);
+    const [selectedCompetition, setSelectedCompetition] = useState<
+        string | null
+    >(null);
+    const [selectedAthletes, setSelectedAthletes] = useState<string[]>([]);
 
-  const competitions = useMemo(() => {
-    if (!resultsData) return [];
-    return [...new Set(resultsData.map(result => result.Date))];
-  }, [resultsData]);
+    const competitions = useMemo(() => {
+        if (!resultsData) return [];
+        return getAvailableCompetitions(resultsData);
+    }, [resultsData]);
 
-  const athletes = useMemo(() => {
-    if (!resultsData) return [];
-    return [...new Set(resultsData.map(result => result.Athlete))];
-  }, [resultsData]);
+    const athletes = useMemo(() => {
+        if (!resultsData) return [];
+        return [...new Set(resultsData.map((result) => result.Athlete))].sort();
+    }, [resultsData]);
 
-  useEffect(() => {
-    if (competitions.length > 0) {
-      setSelectedCompetition(competitions[0]);
-    }
-  }, [competitions]);
+    useEffect(() => {
+        if (competitions.length > 0) {
+            setSelectedCompetition(competitions[0].competitionId.toString());
+        }
+    }, [competitions]);
 
-  const athleteOptions = useMemo(() => {
-    return athletes.map(athlete => ({
-      label: athlete,
-      value: athlete,
-    }));
-  }, [athletes]);
+    useEffect(() => {
+        if (athletes.length > 0) {
+            setSelectedAthletes(athletes);
+        }
+    }, [athletes]);
 
-  const chartData = useMemo(() => {
-    if (!resultsData || !selectedCompetition) return [];
-    const competitionResults = resultsData.filter(result => result.Date === selectedCompetition);
-    
-    return [
-      { 
-        name: "Heat 1", 
-        best: Math.min(...competitionResults.map(r => parseFloat(r["Time: Best Heat 1"]))),
-        ...selectedAthletes.reduce<Record<string, number | null>>((acc, athlete) => {
-          const athleteResult = competitionResults.find(r => r.Athlete === athlete);
-          if (athleteResult) {
-            acc[athlete] = parseFloat(athleteResult["Time: Athlete Heat 1"]) || null;
-          }
-          return acc;
-        }, {}),
-      },
-      { 
-        name: "Heat 2", 
-        best: Math.min(...competitionResults.map(r => parseFloat(r["Time: Best Heat 2"]) || Infinity)),
-        ...selectedAthletes.reduce<Record<string, number | null>>((acc, athlete) => {
-          const athleteResult = competitionResults.find(r => r.Athlete === athlete);
-          if (athleteResult) {
-            acc[athlete] = parseFloat(athleteResult["Time: Athlete Heat 2"]) || null;
-          }
-          return acc;
-        }, {}),
-      },
-      { 
-        name: "Total", 
-        best: Math.min(...competitionResults.map(r => parseFloat(r["Time: Best"]))),
-        ...selectedAthletes.reduce<Record<string, number | null>>((acc, athlete) => {
-          const athleteResult = competitionResults.find(r => r.Athlete === athlete);
-          if (athleteResult) {
-            acc[athlete] = parseFloat(athleteResult["Time: Athlete"]) || null;
-          }
-          return acc;
-        }, {}),
-      },
-    ];
-  }, [resultsData, selectedCompetition, selectedAthletes]);
+    const athleteOptions = useMemo(() => {
+        return athletes.map((athlete) => ({
+            label: athlete,
+            value: athlete,
+        }));
+    }, [athletes]);
 
-  const chartConfig: { [key: string]: { label: string; color: string } } = {
-    best: {
-      label: "Best Time",
-      color: "hsl(var(--chart-1))",
-    },
-    ...selectedAthletes.reduce((acc, athlete, index) => {
-      acc[athlete] = {
-        label: athlete,
-        color: `hsl(var(--chart-${(index % 4) + 2}))`,
-      };
-      return acc;
-    }, {} as { [key: string]: { label: string; color: string } }),
-  };
+    const { chartData, deltas, totalTimes, ranks } = useMemo(() => {
+        if (!resultsData || !selectedCompetition)
+            return { chartData: [], deltas: {}, totalTimes: {}, ranks: {} };
+        const competitionResults = resultsData.filter(
+            (result) => result["Competition ID"] === +selectedCompetition
+        );
 
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Competition Results Comparison</CardTitle>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <label htmlFor="competition-date-select" className="text-sm font-medium whitespace-nowrap">Competition Dates:</label>
-              <Select value={selectedCompetition || ""} onValueChange={setSelectedCompetition}>
-                <SelectTrigger id="competition-date-select" className="w-[180px]">
-                  <SelectValue placeholder="Select competition" />
-                </SelectTrigger>
-                <SelectContent>
-                  {competitions.map((date) => (
-                    <SelectItem key={date} value={date}>
-                      {date}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <MultiSelect
-              options={athleteOptions}
-              onValueChange={setSelectedAthletes}
-              defaultValue={selectedAthletes}
-              placeholder="Select athletes"
-            />
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <LineChart width={600} height={300} data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis label={{ value: 'Seconds', angle: -90, position: 'insideLeft' }} />
-            <Tooltip content={<ChartTooltipContent />} />
-            <Legend />
-            <Line type="monotone" dataKey="best" name="Best Time" stroke={chartConfig.best.color} strokeWidth={2} strokeDasharray="5 5" />
-            {selectedAthletes.map((athlete, index) => (
-              <Line
-                key={athlete}
-                type="monotone"
-                dataKey={athlete}
-                name={athlete}
-                stroke={chartConfig[athlete].color}
-                strokeWidth={2}
-                connectNulls={true}
-              />
-            ))}
-          </LineChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  );
+        const heat1Data: { [key: string]: number | string } = {
+            name: "Heat 1",
+            best: Math.min(
+                ...competitionResults.map(
+                    (r) => r["Time: Best Heat 1"] || Infinity
+                )
+            ),
+        };
+
+        const heat2Data: { [key: string]: number | string } = {
+            name: "Heat 2",
+            best: Math.min(
+                ...competitionResults.map(
+                    (r) => r["Time: Best Heat 2"] || Infinity
+                )
+            ),
+        };
+
+        const deltas: Record<string, number | null | "DNF"> = {};
+        const totalTimes: Record<string, number | null | "DNF"> = {};
+        const ranks: Record<string, number> = {};
+
+        selectedAthletes.forEach((athlete) => {
+            const athleteResult = competitionResults.find(
+                (r) => r.Athlete === athlete
+            );
+            if (athleteResult) {
+                const heat1Time = athleteResult["Time: Athlete Heat 1"] || null;
+                const heat2Time = athleteResult["Time: Athlete Heat 2"] || null;
+                heat1Data[athlete] = heat1Time;
+                heat2Data[athlete] = heat2Time;
+                if (heat1Time !== null && heat2Time !== null) {
+                    deltas[athlete] = heat2Time - heat1Time;
+                    totalTimes[athlete] = heat1Time + heat2Time;
+                } else if (heat1Time !== null && heat2Time === null) {
+                    deltas[athlete] = "DNF";
+                    totalTimes[athlete] = "DNF";
+                } else {
+                    deltas[athlete] = null;
+                    totalTimes[athlete] = null;
+                }
+                ranks[athlete] = athleteResult["Rank: Athlete"];
+            }
+        });
+
+        return { chartData: [heat1Data, heat2Data], deltas, totalTimes, ranks };
+    }, [resultsData, selectedCompetition, selectedAthletes]);
+
+    const chartConfig: ChartConfig = useMemo(() => {
+        const config: ChartConfig = {
+            best: {
+                label: "Best Time",
+                color: "hsl(var(--chart-1))",
+            },
+        };
+
+        const athletesInChart = selectedAthletes.filter(
+            (athlete) =>
+                chartData[0][athlete] !== undefined ||
+                chartData[1][athlete] !== undefined
+        );
+
+        athletesInChart.forEach((athlete, index) => {
+            config[athlete] = {
+                label: athlete,
+                color: `hsl(var(--chart-${(index % 4) + 2}))`,
+            };
+        });
+
+        return config;
+    }, [selectedAthletes, chartData]);
+
+    const rankedTotalTimes = useMemo(() => {
+        return Object.entries(totalTimes)
+            .filter(([_, time]) => typeof time === "number")
+            .sort(([a, _], [b, __]) => ranks[a] - ranks[b])
+            .map(([athlete, time]) => ({
+                athlete,
+                time,
+                rank: ranks[athlete],
+            }));
+    }, [totalTimes, ranks]);
+
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex items-center justify-between">
+                    <CardTitle>Competition Results Comparison</CardTitle>
+                    <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2">
+                            <label
+                                htmlFor="competition-date-select"
+                                className="text-sm font-medium whitespace-nowrap"
+                            >
+                                Competition Dates:
+                            </label>
+                            <Select
+                                value={selectedCompetition || ""}
+                                onValueChange={setSelectedCompetition}
+                            >
+                                <SelectTrigger
+                                    id="competition-date-select"
+                                    className="w-[180px]"
+                                >
+                                    <SelectValue placeholder="Select competition" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {competitions.map((competition) => {
+                                        const duplicateCount =
+                                            competitions.filter(
+                                                (c) =>
+                                                    c.date === competition.date
+                                            ).length;
+                                        const index = competitions
+                                            .filter(
+                                                (c) =>
+                                                    c.date === competition.date
+                                            )
+                                            .indexOf(competition);
+                                        const suffix =
+                                            duplicateCount > 1
+                                                ? ` Competition #${index + 1}`
+                                                : "";
+                                        return (
+                                            <SelectItem
+                                                key={competition.competitionId}
+                                                value={competition.competitionId.toString()}
+                                            >
+                                                {competition.date}
+                                                {suffix}
+                                            </SelectItem>
+                                        );
+                                    })}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <MultiSelect
+                            options={athleteOptions}
+                            onValueChange={setSelectedAthletes}
+                            defaultValue={selectedAthletes}
+                            placeholder="Select athletes"
+                        />
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="flex">
+                    <ChartContainer config={chartConfig} className="grow">
+                        <LineChart width={500} height={300} data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis
+                                label={{
+                                    value: "Seconds",
+                                    angle: -90,
+                                    position: "insideLeft",
+                                }}
+                                domain={["dataMin", "dataMax + 10"]}
+                            />
+                            <Tooltip content={<ChartTooltipContent />} />
+                            <Legend />
+                            <Line
+                                type="monotone"
+                                dataKey="best"
+                                name="Best Time"
+                                stroke={chartConfig.best.color}
+                                strokeWidth={2}
+                                strokeDasharray="5 5"
+                            />
+                            {Object.keys(chartConfig)
+                                .filter((key) => key !== "best")
+                                .sort()
+                                .map((athlete) => (
+                                    <Line
+                                        key={athlete}
+                                        type="monotone"
+                                        dataKey={athlete}
+                                        name={athlete}
+                                        stroke={chartConfig[athlete].color}
+                                        strokeWidth={2}
+                                        connectNulls={true}
+                                    />
+                                ))}
+                        </LineChart>
+                    </ChartContainer>
+                    <div className="ml-4 flex flex-col justify-center">
+                        <h3 className="text-lg font-semibold mb-2">
+                            Heat Time Δ
+                        </h3>
+                        {Object.entries(deltas)
+                            .sort(([a], [b]) => a.localeCompare(b))
+                            .map(([athlete, delta]) => (
+                                <div
+                                    key={athlete}
+                                    className="flex items-center mb-1"
+                                >
+                                    <div
+                                        className="w-4 h-4 mr-2"
+                                        style={{
+                                            backgroundColor:
+                                                chartConfig[athlete]?.color,
+                                        }}
+                                    ></div>
+                                    <span>{athlete}: </span>
+                                    <span
+                                        className={`ml-2 font-semibold ${
+                                            delta === "DNF"
+                                                ? "text-yellow-500"
+                                                : delta && delta < 0
+                                                ? "text-green-500"
+                                                : "text-red-500"
+                                        }`}
+                                    >
+                                        {delta === "DNF"
+                                            ? "DNF"
+                                            : delta !== null
+                                            ? delta > 0
+                                                ? `+${delta.toFixed(2)}s`
+                                                : `${delta.toFixed(2)}s`
+                                            : "N/A"}
+                                    </span>
+                                </div>
+                            ))}
+                        <h3 className="text-lg font-semibold mt-4 mb-2">
+                            Total Times / Rank
+                        </h3>
+                        {rankedTotalTimes.map(({ athlete, time, rank }) => (
+                            <div
+                                key={athlete}
+                                className="flex items-center mb-1 whitespace-nowrap"
+                            >
+                                <div
+                                    className="w-4 h-4 mr-2"
+                                    style={{
+                                        backgroundColor:
+                                            chartConfig[athlete]?.color,
+                                    }}
+                                ></div>
+                                <span>{athlete}: </span>
+                                <span className="ml-2 font-semibold text-blue-500 w-[6ch]">
+                                    {typeof time === "number"
+                                        ? `${time.toFixed(2)}s`
+                                        : "N/A"}
+                                </span>
+                                <span className="ml-2 px-2 py-[1px] text-xs font-semibold text-gray-600 bg-gray-200 rounded-full">
+                                    {(() => {
+                                        const suffixes = [
+                                            "th",
+                                            "st",
+                                            "nd",
+                                            "rd",
+                                        ];
+                                        const v = rank % 100;
+                                        return (
+                                            rank +
+                                            (suffixes[(v - 20) % 10] ||
+                                                suffixes[v] ||
+                                                suffixes[0])
+                                        );
+                                    })()}
+                                </span>
+                            </div>
+                        ))}
+                        {Object.entries(totalTimes)
+                            .filter(
+                                ([_, time]) => time === "DNF" || time === null
+                            )
+                            .sort(([a], [b]) => a.localeCompare(b))
+                            .map(([athlete, totalTime]) => (
+                                <div
+                                    key={athlete}
+                                    className="flex items-center mb-1"
+                                >
+                                    <div
+                                        className="w-4 h-4 mr-2"
+                                        style={{
+                                            backgroundColor:
+                                                chartConfig[athlete]?.color,
+                                        }}
+                                    ></div>
+                                    <span>{athlete}: </span>
+                                    <span
+                                        className={`ml-2 font-semibold ${
+                                            totalTime === "DNF"
+                                                ? "text-yellow-500"
+                                                : "text-gray-500"
+                                        }`}
+                                    >
+                                        {totalTime === "DNF" ? "DNF" : "N/A"}
+                                    </span>
+                                </div>
+                            ))}
+                    </div>
+                </div>
+            </CardContent>
+            <CardFooter className="justify-center">
+                <p className="text-xs text-center text-gray-500">
+                    Multiple competitions may be present on the same date. They
+                    are denoted by (Competition #x) in the dropdown menu.
+                    <br />
+                    Note: DNF means did not finish.
+                </p>
+            </CardFooter>
+        </Card>
+    );
 }
