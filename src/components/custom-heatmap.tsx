@@ -25,6 +25,7 @@ import {
     CardHeader,
     CardTitle,
 } from "./ui/card";
+import { Button } from "./ui/button";
 
 type CorrelationData = {
     columns: string[];
@@ -67,12 +68,33 @@ export function CustomHeatmap({ gender }: { gender: string }) {
     }, [gender]);
 
     const getColor = (value: number) => {
+        const intensity = Math.abs(value);
         if (value > 0) {
-            const intensity = Math.round(255 * (1 - value));
-            return `rgb(255, ${intensity}, ${intensity})`;
+            return cn(
+                "bg-red-400/10",
+                intensity > 0.1 && "bg-red-400/20",
+                intensity > 0.2 && "bg-red-400/30",
+                intensity > 0.3 && "bg-red-400/40",
+                intensity > 0.4 && "bg-red-400/50",
+                intensity > 0.5 && "bg-red-400/60",
+                intensity > 0.6 && "bg-red-400/70",
+                intensity > 0.7 && "bg-red-400/80",
+                intensity > 0.8 && "bg-red-400/90",
+                intensity > 0.9 && "bg-red-400"
+            );
         } else {
-            const intensity = Math.round(255 * (1 + value));
-            return `rgb(${intensity}, 255, ${intensity})`;
+            return cn(
+                "bg-green-400/10",
+                intensity > 0.1 && "bg-green-400/20",
+                intensity > 0.2 && "bg-green-400/30",
+                intensity > 0.3 && "bg-green-400/40",
+                intensity > 0.4 && "bg-green-400/50",
+                intensity > 0.5 && "bg-green-400/60",
+                intensity > 0.6 && "bg-green-400/70",
+                intensity > 0.7 && "bg-green-400/80",
+                intensity > 0.8 && "bg-green-400/90",
+                intensity > 0.9 && "bg-green-400"
+            );
         }
     };
 
@@ -81,10 +103,7 @@ export function CustomHeatmap({ gender }: { gender: string }) {
         for (let i = -1; i <= 1; i += 0.25) {
             legendItems.push(
                 <div key={i} className="flex items-center">
-                    <div
-                        className="w-6 h-6 mr-2"
-                        style={{ backgroundColor: getColor(i) }}
-                    ></div>
+                    <div className={cn("w-6 h-6 mr-2", getColor(i))}></div>
                     <span>{i.toFixed(2)}</span>
                 </div>
             );
@@ -98,8 +117,6 @@ export function CustomHeatmap({ gender }: { gender: string }) {
             </div>
         );
     };
-
-    console.log({ selectedElement });
 
     const getScatterData = () => {
         if (!selectedElement || !resultsData || !wellnessData) return [];
@@ -132,32 +149,18 @@ export function CustomHeatmap({ gender }: { gender: string }) {
 
                 return { x: xValue as number, y: yValue as number };
             })
-            .filter(Boolean);
+            .filter(Boolean) as { x: number; y: number; bestFitY?: number }[];
 
         const { slope, intercept } = calculateLinearRegression(scatterData);
-        console.log({ scatterData });
-        console.log({ slope, intercept });
 
         // Calculate best fit line for each data point
-        scatterData.forEach((point, index) => {
-            point.bestFitY = slope * point.x + intercept;
+        scatterData.forEach((point) => {
+            if (point) {
+                point.bestFitY = slope * point.x + intercept;
+            }
         });
 
-        // console.log({ slope, intercept });
-        // const minX = Math.min(...scatterData.map((d) => d.x));
-        // const minY = slope * minX + intercept;
-        // console.log({ minX, minY });
-        // scatterData[0].slope = minY;
-
-        // const maxX = Math.max(
-        //     ...scatterData.map((d) => d.x).filter((d) => !!d)
-        // );
-        // const maxY = slope * maxX + intercept;
-        // console.log({ maxX, maxY });
-        // scatterData[1].slope = maxY;
-        // // scatterData[scatterData.length - 1].slope = maxY;
-
-        return scatterData;
+        return scatterData as { x: number; y: number; bestFitY: number }[];
     };
 
     const calculateLinearRegression = (data: { x: number; y: number }[]) => {
@@ -180,31 +183,9 @@ export function CustomHeatmap({ gender }: { gender: string }) {
         return { slope, intercept };
     };
 
-    const scatterData = getScatterData();
-    const { slope, intercept } = calculateLinearRegression(scatterData);
-
-    const lineData = [
-        {
-            // x: Math.min(...scatterData.map((d) => d.x)),
-            slope: slope,
-            // y: slope * Math.min(...scatterData.map((d) => d.x)) + intercept,
-        },
-        // {
-        //     x: Math.max(...scatterData.map((d) => d.x)),
-        //     slope: slope,
-        //     y: slope * Math.max(...scatterData.map((d) => d.x)) + intercept,
-        // },
-    ];
-
-    console.log({ slope, intercept });
-    console.log({ lineData });
-
-    console.log({ resultsData, wellnessData });
-    console.log({ data: getScatterData() });
-
     return (
-        <div className="flex">
-            <Card className="flex-1">
+        <div className="flex flex-col lg:flex-row">
+            <Card className="flex-1 mb-4 lg:mb-0 lg:mr-4 basis-1/3">
                 <CardHeader>
                     <CardTitle className="text-center">
                         Total Time and Split Time: Heat 2 - Wellness Correlation
@@ -212,15 +193,14 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="mt-16 flex">
+                    <div className="mt-8 lg:mt-16 flex flex-col lg:flex-row">
                         {correlationData ? (
                             <TooltipProvider>
                                 <div className="flex-grow">
                                     <div
-                                        className="grid"
+                                        className="grid gap-1"
                                         style={{
-                                            gridTemplateColumns: `auto repeat(${correlationData.columns.length}, 1fr)`,
-                                            gap: "1px",
+                                            gridTemplateColumns: `auto repeat(${correlationData.columns.length}, minmax(60px, 1fr))`,
                                         }}
                                     >
                                         <div></div>
@@ -289,29 +269,27 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                                                     )
                                                                 }
                                                             >
-                                                                <div
-                                                                    className={`aspect-square flex items-center justify-center text-xs ${
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    className={cn(
+                                                                        "p-0 text-xs w-full h-full aspect-square",
+                                                                        getColor(
+                                                                            value
+                                                                        ),
                                                                         selectedElement?.row ===
                                                                             row &&
-                                                                        selectedElement?.column ===
-                                                                            correlationData
-                                                                                .columns[
-                                                                                colIndex
-                                                                            ]
-                                                                            ? "border-2 border-black"
-                                                                            : ""
-                                                                    }`}
-                                                                    style={{
-                                                                        backgroundColor:
-                                                                            getColor(
-                                                                                value
-                                                                            ),
-                                                                    }}
+                                                                            selectedElement?.column ===
+                                                                                correlationData
+                                                                                    .columns[
+                                                                                    colIndex
+                                                                                ] &&
+                                                                            "ring-2 ring-primary focus:ring-4 focus:ring-primary/50"
+                                                                    )}
                                                                 >
                                                                     {value.toFixed(
                                                                         2
                                                                     )}
-                                                                </div>
+                                                                </Button>
                                                             </TooltipTrigger>
                                                             <TooltipContent
                                                                 className={cn(
@@ -336,7 +314,9 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                         )}
                                     </div>
                                 </div>
-                                <div className="ml-8">{renderLegend()}</div>
+                                <div className="mt-4 lg:mt-0 lg:ml-8">
+                                    {renderLegend()}
+                                </div>
                             </TooltipProvider>
                         ) : (
                             <p>Loading correlation data...</p>
@@ -344,13 +324,16 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                     </div>
                 </CardContent>
                 <CardFooter className="text-center">
-                    Total Time found increased soreness and higher stress are
-                    associated with longer performance times. Split Time: Heat 2
-                    found greater fatigue leads to longer split times, while
-                    higher motivation is linked to slightly better split times.
+                    <p className="text-sm">
+                        Total Time found increased soreness and higher stress
+                        are associated with longer performance times. Split
+                        Time: Heat 2 found greater fatigue leads to longer split
+                        times, while higher motivation is linked to slightly
+                        better split times.
+                    </p>
                 </CardFooter>
             </Card>
-            <Card className="flex-1 ml-4">
+            <Card className="flex-1 basis-1/3">
                 <CardHeader>
                     <CardTitle className="text-center">
                         Scatter Plot:{" "}
