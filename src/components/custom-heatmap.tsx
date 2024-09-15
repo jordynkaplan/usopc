@@ -12,12 +12,11 @@ import {
     CartesianGrid,
     ComposedChart,
     Line,
-    Tooltip as RechartsTooltip,
-    ResponsiveContainer,
     Scatter,
     XAxis,
     YAxis,
 } from "recharts";
+import { Button } from "./ui/button";
 import {
     Card,
     CardContent,
@@ -25,7 +24,12 @@ import {
     CardHeader,
     CardTitle,
 } from "./ui/card";
-import { Button } from "./ui/button";
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "./ui/chart";
 
 type CorrelationData = {
     columns: string[];
@@ -182,6 +186,13 @@ export function CustomHeatmap({ gender }: { gender: string }) {
 
         return { slope, intercept };
     };
+
+    const chartConfig = {
+        desktop: {
+            label: "Desktop",
+            color: "hsl(var(--chart-1))",
+        },
+    } satisfies ChartConfig;
 
     return (
         <div className="flex flex-col lg:flex-row">
@@ -344,11 +355,7 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                 </CardHeader>
                 <CardContent>
                     <div style={{ width: "100%", height: 400 }}>
-                        <ResponsiveContainer
-                            className="graph-wrapper"
-                            width="100%"
-                            height="90%"
-                        >
+                        <ChartContainer config={chartConfig}>
                             <ComposedChart
                                 data={getScatterData()}
                                 margin={{
@@ -363,6 +370,7 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                     type="number"
                                     dataKey="x"
                                     name={selectedElement?.column}
+                                    unit="s"
                                     domain={["dataMin", "dataMax"]}
                                     label={{
                                         value: selectedElement?.column,
@@ -381,11 +389,13 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                         position: "insideLeft",
                                     }}
                                 />
-                                <RechartsTooltip
-                                    cursor={{ strokeDasharray: "3 3" }}
+                                <ChartTooltip
+                                    content={
+                                        <ChartTooltipContent indicator="dot" />
+                                    }
                                 />
                                 <Scatter
-                                    name="Athletes"
+                                    name={selectedElement?.row}
                                     dataKey="y"
                                     fill="#8884d8"
                                 />
@@ -396,7 +406,7 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                     dot={false}
                                 />
                             </ComposedChart>
-                        </ResponsiveContainer>
+                        </ChartContainer>
                     </div>
                 </CardContent>
             </Card>
