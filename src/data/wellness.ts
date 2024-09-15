@@ -14,8 +14,22 @@ export interface WellnessData {
     "Sleep Quality": number;
     Stress: number;
     "Travel Hours": number;
-    "Sport Specific Training Volume": string;
+    "Sport Specific Training Volume": number;
 }
+
+const sportSpecificTrainingVolumeMap = {
+    None: 0,
+    Low: 1,
+    Moderate: 2,
+    High: 3,
+};
+
+export const sportSpecificTrainingTitleMap = {
+    0: "None",
+    1: "Low",
+    2: "Moderate",
+    3: "High",
+};
 
 const fetchWellnessLoadData = async (): Promise<WellnessData[]> => {
     return new Promise((resolve, reject) => {
@@ -23,6 +37,14 @@ const fetchWellnessLoadData = async (): Promise<WellnessData[]> => {
             download: true,
             header: true,
             dynamicTyping: true,
+            transform(value, field) {
+                if (field === "Sport Specific Training Volume") {
+                    return sportSpecificTrainingVolumeMap[
+                        value as keyof typeof sportSpecificTrainingVolumeMap
+                    ];
+                }
+                return value;
+            },
             complete: (results) => {
                 // Calculate mean and standard deviation for Resting HR
                 const validRestingHRs = results.data

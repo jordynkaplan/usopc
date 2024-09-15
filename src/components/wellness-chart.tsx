@@ -1,5 +1,9 @@
 import { ResultsData, useResultsDataByAthlete } from "@/data/results";
-import { useWellnessLoadDataByAthlete, WellnessData } from "@/data/wellness";
+import {
+    useWellnessLoadDataByAthlete,
+    WellnessData,
+    sportSpecificTrainingTitleMap,
+} from "@/data/wellness";
 import { cn, removeUndefinedOrNull, uniqueValues } from "@/lib/utils";
 import { useMemo, useState } from "react";
 import {
@@ -114,6 +118,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
 
         return filledWellnessData;
     }, [filledWellnessData]);
+    console.log({ chartData });
     const yAxisDomain = useMemo(() => {
         const values = filledWellnessData.map(
             (entry) => +(entry[selectedMetric] ?? 0)
@@ -139,6 +144,7 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         "Sleep Quality",
         "Stress",
         "Travel Hours",
+        "Sport Specific Training Volume",
     ] as (keyof WellnessData)[];
 
     return (
@@ -193,7 +199,23 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 });
                             }}
                         />
-                        <YAxis domain={yAxisDomain} />
+                        <YAxis
+                            domain={yAxisDomain}
+                            tickFormatter={(value) =>
+                                selectedMetric ===
+                                "Sport Specific Training Volume"
+                                    ? sportSpecificTrainingTitleMap[
+                                          value as keyof typeof sportSpecificTrainingTitleMap
+                                      ] || value
+                                    : value
+                            }
+                            ticks={
+                                selectedMetric ===
+                                "Sport Specific Training Volume"
+                                    ? [0, 1, 2, 3]
+                                    : undefined
+                            }
+                        />
                         <ChartTooltip
                             cursor={false}
                             content={
@@ -214,11 +236,22 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                         const isNan = isNaN(
                                             item.value as number
                                         );
-                                        const innerText = isNan
+                                        let innerText = isNan
                                             ? "Not reported"
                                             : (
                                                   item.value ?? "Not reported"
                                               ).toLocaleString();
+
+                                        if (
+                                            selectedMetric ===
+                                                "Sport Specific Training Volume" &&
+                                            !isNan
+                                        ) {
+                                            innerText =
+                                                sportSpecificTrainingTitleMap[
+                                                    item.value as keyof typeof sportSpecificTrainingTitleMap
+                                                ] || innerText;
+                                        }
 
                                         return (
                                             <>
