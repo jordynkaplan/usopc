@@ -75,29 +75,60 @@ export function CustomHeatmap({ gender }: { gender: string }) {
         const intensity = Math.abs(value);
         if (value > 0) {
             return cn(
-                "bg-red-400/10",
-                intensity > 0.1 && "bg-red-400/20",
-                intensity > 0.2 && "bg-red-400/30",
-                intensity > 0.3 && "bg-red-400/40",
-                intensity > 0.4 && "bg-red-400/50",
-                intensity > 0.5 && "bg-red-400/60",
-                intensity > 0.6 && "bg-red-400/70",
-                intensity > 0.7 && "bg-red-400/80",
-                intensity > 0.8 && "bg-red-400/90",
-                intensity > 0.9 && "bg-red-400"
+                "bg-red-400/10 hover:bg-red-500",
+                intensity > 0.1 && "bg-red-400/20 hover:bg-red-500",
+                intensity > 0.2 && "bg-red-400/30 hover:bg-red-500",
+                intensity > 0.3 && "bg-red-400/40 hover:bg-red-500",
+                intensity > 0.4 && "bg-red-400/50 hover:bg-red-500",
+                intensity > 0.5 && "bg-red-400/60 hover:bg-red-500",
+                intensity > 0.6 && "bg-red-400/70 hover:bg-red-500",
+                intensity > 0.7 && "bg-red-400/80 hover:bg-red-500",
+                intensity > 0.8 && "bg-red-400/90 hover:bg-red-500",
+                intensity > 0.9 && "bg-red-400 hover:bg-red-500"
             );
         } else {
             return cn(
-                "bg-green-400/10",
-                intensity > 0.1 && "bg-green-400/20",
-                intensity > 0.2 && "bg-green-400/30",
-                intensity > 0.3 && "bg-green-400/40",
-                intensity > 0.4 && "bg-green-400/50",
-                intensity > 0.5 && "bg-green-400/60",
-                intensity > 0.6 && "bg-green-400/70",
-                intensity > 0.7 && "bg-green-400/80",
-                intensity > 0.8 && "bg-green-400/90",
-                intensity > 0.9 && "bg-green-400"
+                "bg-green-400/10 hover:bg-green-500",
+                intensity > 0.1 && "bg-green-400/20 hover:bg-green-500",
+                intensity > 0.2 && "bg-green-400/30 hover:bg-green-500",
+                intensity > 0.3 && "bg-green-400/40 hover:bg-green-500",
+                intensity > 0.4 && "bg-green-400/50 hover:bg-green-500",
+                intensity > 0.5 && "bg-green-400/60 hover:bg-green-500",
+                intensity > 0.6 && "bg-green-400/70 hover:bg-green-500",
+                intensity > 0.7 && "bg-green-400/80 hover:bg-green-500",
+                intensity > 0.8 && "bg-green-400/90 hover:bg-green-500",
+                intensity > 0.9 && "bg-green-400 hover:bg-green-500"
+            );
+        }
+    };
+
+    const getRingColor = (value: number) => {
+        const intensity = Math.abs(value);
+        if (value > 0) {
+            return cn(
+                "ring-red-500",
+                intensity > 0.1 && "ring-red-500",
+                intensity > 0.2 && "ring-red-500",
+                intensity > 0.3 && "ring-red-500",
+                intensity > 0.4 && "ring-red-500",
+                intensity > 0.5 && "ring-red-500",
+                intensity > 0.6 && "ring-red-500",
+                intensity > 0.7 && "ring-red-500",
+                intensity > 0.8 && "ring-red-500",
+                intensity > 0.9 && "ring-red-500"
+            );
+        } else {
+            return cn(
+                "ring-green-500",
+                intensity > 0.1 && "ring-green-500",
+                intensity > 0.2 && "ring-green-500",
+                intensity > 0.3 && "ring-green-500",
+                intensity > 0.4 && "ring-green-500",
+                intensity > 0.5 && "ring-green-500",
+                intensity > 0.6 && "ring-green-500",
+                intensity > 0.7 && "ring-green-500",
+                intensity > 0.8 && "ring-green-500",
+                intensity > 0.9 && "ring-green-500"
             );
         }
     };
@@ -287,6 +318,7 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                                                         getColor(
                                                                             value
                                                                         ),
+                                                                        "transition-all duration-200 hover:scale-105",
                                                                         selectedElement?.row ===
                                                                             row &&
                                                                             selectedElement?.column ===
@@ -294,7 +326,10 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                                                                     .columns[
                                                                                     colIndex
                                                                                 ] &&
-                                                                            "ring-2 ring-primary focus:ring-4 focus:ring-primary/50"
+                                                                            "ring-2 focus:ring-4",
+                                                                        getRingColor(
+                                                                            value
+                                                                        )
                                                                     )}
                                                                 >
                                                                     {value.toFixed(
