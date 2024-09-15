@@ -14,6 +14,8 @@ import { useMemo, useState } from "react";
 import { Slider } from "./ui/slider";
 import { SleepCards } from "./sleep-cards";
 import * as portals from "react-reverse-portal";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Info } from "lucide-react";
 
 function getMetricUnit(metric: string): string {
     switch (metric) {
@@ -31,9 +33,7 @@ function getMetricUnit(metric: string): string {
     }
 }
 
-function getMetricDescription(
-    days: number
-): string {
+function getMetricDescription(days: number): string {
     return `Avg in the ${days} days leading up to best competition.`;
 }
 
@@ -128,20 +128,36 @@ export function WellnessBlocks({ athlete, portalNode }: WellnessBlocksProps) {
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between mb-4">
-                <p className="font-semibold text-md">
-                    Wellness Metrics Before Best Competition
-                </p>
-                <div className="flex items-center gap-2">
-                    <span className="text-sm">Days: {leadingDays}</span>
-                    <Slider
-                        value={[leadingDays]}
-                        onValueChange={(value) => setLeadingDays(value[0])}
-                        min={1}
-                        max={leadingDaysAvailable}
-                        step={1}
-                        className="w-[100px]"
-                    />
+            <div className="items-center mb-2">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-md">
+                            Leading Days
+                        </p>
+                        <Tooltip delayDuration={100}>
+                            <TooltipTrigger asChild>
+                                <Info className="h-4 w-4 text-muted-foreground" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p className="text-xs">
+                                    Leading days is the number of days before the best competition.<br />Best competition is determined by the lowest % time delta in a competition when compared to best competitor.
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </div>
+                    <div className="my-2 flex items-center gap-2">
+                        <span className="text-sm font-semibold">
+                            Days: {leadingDays}
+                        </span>
+                        <Slider
+                            value={[leadingDays]}
+                            onValueChange={(value) => setLeadingDays(value[0])}
+                            min={1}
+                            max={leadingDaysAvailable}
+                            step={1}
+                            className="w-[100px]"
+                        />
+                    </div>
                 </div>
             </div>
             {wellnessBlockProps.map((props) => (
