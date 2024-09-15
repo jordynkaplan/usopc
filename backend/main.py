@@ -18,6 +18,9 @@ wellness_df = pd.read_csv(wellness_path)
 # Merge the dataframes on 'Athlete' and 'Date'
 merged_df = pd.merge(results_df, wellness_df, on=["Athlete", "Date"])
 
+# Set any Resting HR values outside of 3 standard deviations to NaN
+merged_df["Resting HR"] = merged_df["Resting HR"].apply(lambda x: np.nan if np.abs(x - merged_df["Resting HR"].mean()) > 3 * merged_df["Resting HR"].std() else x)
+
 # Calculate correlation between performance metrics and wellness factors
 performance_metrics = ["Time Delta: Best", "Time Delta: Heat 2"]
 wellness_factors = [
@@ -31,7 +34,7 @@ wellness_factors = [
 ]
 
 # Flag to control debug file and PNG creation
-CREATE_DEBUG_FILES = False
+CREATE_DEBUG_FILES = True
 
 @route("/corr/<gender>")
 def index(gender):

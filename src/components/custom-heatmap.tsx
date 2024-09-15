@@ -123,9 +123,9 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                 let yValue;
 
                 if (selectedElement.row === "Time Delta: Best") {
-                    yValue = Number(result["Time Delta: Best"]);
+                    yValue = result["Time Delta: Best"];
                 } else if (selectedElement.row === "Time Delta: Heat 2") {
-                    yValue = Number(result["Time Delta: Heat 2"]);
+                    yValue = result["Time Delta: Heat 2"];
                 }
 
                 if (yValue === null || yValue === undefined) return null;
@@ -212,7 +212,7 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="p-8 mt-16 flex">
+                    <div className="mt-16 flex">
                         {correlationData ? (
                             <TooltipProvider>
                                 <div className="flex-grow">
@@ -380,6 +380,7 @@ export function CustomHeatmap({ gender }: { gender: string }) {
                                     type="number"
                                     dataKey="x"
                                     name={selectedElement?.column}
+                                    domain={["dataMin", "dataMax"]}
                                     label={{
                                         value: selectedElement?.column,
                                         position: "bottom",
