@@ -1,4 +1,5 @@
 import { CustomHeatmap } from "@/components/custom-heatmap";
+import ResultGraphComparison from "@/components/result-graph-comparison";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
@@ -67,7 +68,9 @@ export function AthleteComparison() {
             <WellnessGraphComparison gender={selectedGender} />
             </div>
           </TabsContent>
-          <TabsContent value="results"></TabsContent>
+          <TabsContent value="results">
+            <ResultGraphComparison gender={selectedGender} />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
