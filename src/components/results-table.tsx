@@ -19,8 +19,8 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
           <div>
             <Table>
               <TableCaption>
-                Lowest ranks higlighted in green,
-                highest ranks in red, and missing data in
+                All times recorded in seconds. "Difference from best" is the difference between the athlete's time and the best time in the event. Best ranks higlighted in green,
+                worst ranks in red, and missing data in
                 yellow.
               </TableCaption>
               <TableHeader>
@@ -30,22 +30,31 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                   </TableHead>
                   <TableHead className="text-right font-bold">Rank</TableHead>
                   <TableHead className="text-right font-bold">
-                    Total Time (sec)
+                    Total Time
                   </TableHead>
                   <TableHead className="text-right font-bold">
-                    Heat 1 (sec)
+                    Difference from Best Total Time
                   </TableHead>
                   <TableHead className="text-right font-bold">
-                    Split Time: Heat 1 (sec)
+                    Heat 1
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Difference from Best Heat 1
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Split Time: Heat 1
                   </TableHead>
                   <TableHead className="text-right font-bold">
                     Split Rank: Heat 1
                   </TableHead>
                   <TableHead className="text-right font-bold">
-                    Heat 2 (sec)
+                    Heat 2
                   </TableHead>
                   <TableHead className="text-right font-bold">
-                    Split Time: Heat 2 (sec)
+                    Difference from Best Heat 2
+                  </TableHead>
+                  <TableHead className="text-right font-bold">
+                    Split Time: Heat 2
                   </TableHead>
                   <TableHead className="text-right font-bold">
                     Split Rank: Heat 2
@@ -54,70 +63,99 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
               </TableHeader>
               <TableBody>
                 {athleteResults?.map((athlete, _index, array) => {
-                  const bestRank = Math.min(
+                  const bestOverallRank = Math.min(
                     ...array.map(
                       (a) => parseInt(a["Rank: Athlete"]) || Infinity
                     )
                   );
-                  const worstRank = Math.max(
+                  const worstOverallRank = Math.max(
                     ...array.map(
                       (a) => parseInt(a["Rank: Athlete"]) || -Infinity
+                    )
+                  );
+                  const bestSplitRankHeat1 = Math.min(
+                    ...array.map(
+                      (a) => parseInt(a["Split Rank: Athlete Heat 1"]) || Infinity
+                    )
+                  );
+                  const worstSplitRankHeat1 = Math.max(
+                    ...array.map(
+                      (a) => parseInt(a["Split Rank: Athlete Heat 1"]) || -Infinity
+                    )
+                  );
+                  const bestSplitRankHeat2 = Math.min(
+                    ...array.map(
+                      (a) => parseInt(a["Split Rank: Athlete Heat 2"]) || Infinity
+                    )
+                  );
+                  const worstSplitRankHeat2 = Math.max(
+                    ...array.map(
+                      (a) => parseInt(a["Split Rank: Athlete Heat 2"]) || -Infinity
                     )
                   );
 
                   return (
                     <TableRow key={athlete.Date}>
-                      <TableCell className="text-right">
+                      <TableCell className={`text-right ${athlete.Date === "" ? "bg-yellow-200/50" : ""}`}>
                         {athlete.Date}
                       </TableCell>
                       <TableCell
                         className={`text-right ${
                           athlete["Rank: Athlete"] === ""
                             ? "bg-yellow-200/50"
-                            : parseInt(athlete["Rank: Athlete"]) === bestRank
+                            : parseInt(athlete["Rank: Athlete"]) === bestOverallRank
                             ? "bg-green-200"
-                            : parseInt(athlete["Rank: Athlete"]) === worstRank
+                            : parseInt(athlete["Rank: Athlete"]) === worstOverallRank
                             ? "bg-red-200"
                             : ""
                         }`}
                       >
                         {athlete["Rank: Athlete"]}
                       </TableCell>
-                      <TableCell className="font-medium text-right">
+                      <TableCell className={`font-medium text-right ${athlete["Time: Athlete"] === "" ? "bg-yellow-200/50" : ""}`}>
                         {athlete["Time: Athlete"]}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className={`text-right ${athlete["Time Delta: Best"] === "" ? "bg-yellow-200/50" : ""}`}>
+                        {athlete["Time Delta: Best"]}
+                      </TableCell>
+                      <TableCell className={`text-right ${athlete["Time: Athlete Heat 1"] === "" ? "bg-yellow-200/50" : ""}`}>
                         {athlete["Time: Athlete Heat 1"]}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className={`text-right ${athlete["Time Delta: Heat 1"] === "" ? "bg-yellow-200/50" : ""}`}>
+                        {athlete["Time Delta: Heat 1"]}
+                      </TableCell>
+                      <TableCell className={`text-right ${athlete["Split Time: Athlete Heat 1"] === "" ? "bg-yellow-200/50" : ""}`}>
                         {athlete["Split Time: Athlete Heat 1"]}
                       </TableCell>
                       <TableCell
                         className={`text-right ${
                           athlete["Split Rank: Athlete Heat 1"] === ""
                             ? "bg-yellow-200/50"
-                            : parseInt(athlete["Split Rank: Athlete Heat 1"]) === bestRank
+                            : parseInt(athlete["Split Rank: Athlete Heat 1"]) === bestSplitRankHeat1
                             ? "bg-green-200"
-                            : parseInt(athlete["Split Rank: Athlete Heat 1"]) === worstRank
+                            : parseInt(athlete["Split Rank: Athlete Heat 1"]) === worstSplitRankHeat1
                             ? "bg-red-200"
                             : ""
                         }`}
                       >
                         {athlete["Split Rank: Athlete Heat 1"]}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className={`text-right ${athlete["Time: Athlete Heat 2"] === "" ? "bg-yellow-200/50" : ""}`}>
                         {athlete["Time: Athlete Heat 2"]}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className={`text-right ${athlete["Time Delta: Heat 2"] === "" ? "bg-yellow-200/50" : ""}`}>
+                        {athlete["Time Delta: Heat 2"]}
+                      </TableCell>
+                      <TableCell className={`text-right ${athlete["Split Time: Athlete Heat 2"] === "" ? "bg-yellow-200/50" : ""}`}>
                         {athlete["Split Time: Athlete Heat 2"]}
                       </TableCell>
                       <TableCell
                         className={`text-right ${
                           athlete["Split Rank: Athlete Heat 2"] === ""
                             ? "bg-yellow-200/50"
-                            : parseInt(athlete["Split Rank: Athlete Heat 2"]) === bestRank
+                            : parseInt(athlete["Split Rank: Athlete Heat 2"]) === bestSplitRankHeat2
                             ? "bg-green-200"
-                            : parseInt(athlete["Split Rank: Athlete Heat 2"]) === worstRank
+                            : parseInt(athlete["Split Rank: Athlete Heat 2"]) === worstSplitRankHeat2
                             ? "bg-red-200"
                             : ""
                         }`}

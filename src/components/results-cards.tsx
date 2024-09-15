@@ -6,7 +6,7 @@ export function ResultsCards({ athlete }: { athlete: string | null }) {
   const { data: athleteResults } = useResultsDataByAthlete(athlete);
 
   const totalCompetitions = athleteResults?.length || 0;
-  const bestResult = athleteResults ? Math.min(...athleteResults.map(r => parseFloat(r["Time: Athlete"]) || Infinity)) : 0;
+  const timeDeltaBest = athleteResults ? Math.min(...athleteResults.map(r => parseFloat(r["Time Delta: Best"]) || Infinity)) : 0;
   const highestRank = athleteResults ? Math.min(...athleteResults.map(r => parseInt(r["Rank: Athlete"]) || Infinity)) : 0;
   const averageRank = athleteResults ? athleteResults.reduce((sum, r) => sum + (parseInt(r["Rank: Athlete"]) || 0), 0) / totalCompetitions : 0;
   const bestSplitTimeHeat2 = athleteResults ? Math.min(...athleteResults.map(r => parseFloat(r["Split Time: Athlete Heat 2"]) || Infinity)) : 0;
@@ -34,8 +34,8 @@ export function ResultsCards({ athlete }: { athlete: string | null }) {
               </Card>
               <Card className="flex-1">
                 <CardContent className="flex flex-col items-center p-6 justify-center h-full">
-                  <p className="text-center">Best % off Best Time</p>
-                  {/* <p className="font-bold text-3xl">{averageRank.toFixed(2)}</p> */}
+                  <p className="text-center">Seconds from Best Time</p>
+                  <p className="font-bold text-3xl">{timeDeltaBest.toFixed(2)}</p>
                 </CardContent>
               </Card>
               <Card className="flex-1">

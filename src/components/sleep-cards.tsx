@@ -35,118 +35,96 @@ export function SleepCards({
                         {leadingDays} days leading up to your best competition.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="flex gap-4">
-                    <div className="grid auto-rows-min gap-2">
-                        <div>Sleep Quality</div>
-                        <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                            {avgSleepQuality.toFixed(2)}
-                            <span className="text-sm font-normal text-muted-foreground">
-                                /100
-                            </span>
+                <CardContent className="flex gap-6">
+                    <div className="flex items-center gap-4 w-full">
+                        <div className="flex-1">
+                            <div className="text-lg font-semibold">Sleep Quality</div>
+                            <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none mt-2">
+                                {avgSleepQuality.toFixed(2)}
+                                <span className="text-sm font-normal text-muted-foreground">
+                                    /100
+                                </span>
+                            </div>
                         </div>
                         <ChartContainer
                             config={{
-                                steps: {
-                                    label: "Steps",
-                                    color: "hsl(var(--chart-1))",
+                                calories: {
+                                    label: "Calories",
+                                    color: "#a32135",
                                 },
                             }}
-                            className="aspect-auto h-[32px] w-full"
+                            className="flex-1 h-[100px]"
                         >
                             <BarChart
                                 accessibilityLayer
-                                layout="vertical"
                                 margin={{
                                     left: 0,
-                                    top: 0,
                                     right: 0,
+                                    top: 0,
                                     bottom: 0,
                                 }}
-                                data={[
-                                    {
-                                        date: "2024",
-                                        steps: 12435,
-                                    },
-                                ]}
+                                data={wellnessLeadingUpData}
                             >
                                 <Bar
-                                    dataKey="steps"
+                                    dataKey="Sleep Quality"
                                     fill="#a32135"
-                                    radius={4}
-                                    barSize={32}
-                                >
-                                    <LabelList
-                                        position="insideLeft"
-                                        dataKey="date"
-                                        offset={8}
-                                        fontSize={12}
-                                        fill="white"
-                                    />
-                                </Bar>
-                                <YAxis
+                                    radius={2}
+                                    fillOpacity={0.6}
+                                    activeIndex={6}
+                                />
+                                <XAxis
                                     dataKey="date"
-                                    type="category"
-                                    tickCount={1}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickMargin={4}
                                     hide
                                 />
-                                <XAxis dataKey="steps" type="number" hide />
                             </BarChart>
                         </ChartContainer>
                     </div>
-                    <div className="grid auto-rows-min gap-2">
-                        <div>Sleep Hours</div>
-                        <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                            {avgSleepHours.toFixed(2)}
-                            <span className="text-sm font-normal text-muted-foreground">
-                                hours/night
-                            </span>
+                    <div className="flex items-center gap-4 w-full">
+                        <div className="flex-1">
+                            <div className="text-lg font-semibold">Sleep Hours</div>
+                            <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none mt-2">
+                                {avgSleepHours.toFixed(2)}
+                                <span className="text-sm font-normal text-muted-foreground">
+                                    hours/night
+                                </span>
+                            </div>
                         </div>
                         <ChartContainer
                             config={{
-                                steps: {
-                                    label: "Steps",
-                                    color: "hsl(var(--muted))",
+                                calories: {
+                                    label: "Calories",
+                                    color: "#a32135",
                                 },
                             }}
-                            className="aspect-auto h-[32px] w-full"
+                            className="flex-1 h-[100px]"
                         >
                             <BarChart
                                 accessibilityLayer
-                                layout="vertical"
                                 margin={{
                                     left: 0,
-                                    top: 0,
                                     right: 0,
+                                    top: 0,
                                     bottom: 0,
                                 }}
-                                data={[
-                                    {
-                                        date: "2023",
-                                        steps: 10103,
-                                    },
-                                ]}
+                                data={wellnessLeadingUpData}
                             >
                                 <Bar
-                                    dataKey="steps"
-                                    fill="var(--color-steps)"
-                                    radius={4}
-                                    barSize={32}
-                                >
-                                    <LabelList
-                                        position="insideLeft"
-                                        dataKey="date"
-                                        offset={8}
-                                        fontSize={12}
-                                        fill="hsl(var(--muted-foreground))"
-                                    />
-                                </Bar>
-                                <YAxis
+                                    dataKey="Sleep Hours"
+                                    fill="#a32135"
+                                    radius={2}
+                                    fillOpacity={0.6}
+                                    activeIndex={6}
+                                />
+                                <XAxis
                                     dataKey="date"
-                                    type="category"
-                                    tickCount={1}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickMargin={4}
                                     hide
                                 />
-                                <XAxis dataKey="steps" type="number" hide />
                             </BarChart>
                         </ChartContainer>
                     </div>

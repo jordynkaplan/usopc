@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useWellnessDataByGender, WellnessData } from "@/data/wellness";
+import { useResultsDataByGender } from "@/data/results";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
     Select,
@@ -14,7 +15,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "./ui/chart";
-import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis, ReferenceLine } from "recharts";
 import { MultiSelect } from "./ui/multi-select";
 
 export function WellnessGraphComparison({ gender }: { gender: string }) {
@@ -22,6 +23,7 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
         useState<keyof WellnessData>("Resting HR");
     const [selectedAthletes, setSelectedAthletes] = useState<string[]>([]);
     const { data: wellnessData } = useWellnessDataByGender(gender);
+    const { data: resultsData } = useResultsDataByGender(gender);
 
     const metrics = [
         "Resting HR",
@@ -87,6 +89,11 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
         return acc;
     }, {} as ChartConfig);
 
+    const competitionDates = useMemo(() => {
+        if (!resultsData) return [];
+        return Array.from(new Set(resultsData.map((result) => result.Date)));
+    }, [resultsData]);
+
     return (
         <Card>
             <CardHeader>
@@ -135,16 +142,43 @@ export function WellnessGraphComparison({ gender }: { gender: string }) {
                         <XAxis dataKey="Date" />
                         <YAxis />
                         <ChartTooltip content={<ChartTooltipContent />} />
-                        <Legend />
                         {selectedAthletes.map((athlete, index) => (
                             <Line
                                 key={athlete}
+                                connectNulls
                                 type="monotone"
                                 dataKey={athlete}
                                 stroke={`hsl(var(--chart-${(index % 5) + 1}))`}
                                 activeDot={{ r: 8 }}
                             />
                         ))}
+                        {competitionDates.map((date, index) => (
+                            <ReferenceLine
+                                key={`competition-${index}`}
+                                x={date}
+                                stroke="#888"
+                                strokeWidth={2}
+                                strokeDasharray="3 3"
+                            />
+                        ))}
+                        <Legend
+                         payload={[
+                             ...selectedAthletes.map((athlete, index) => ({
+                                 value: athlete,
+                                 type: "line" as const,
+                                 color: `hsl(var(--chart-${(index % 5) + 1}))`,
+                             })),
+                             {
+                                 value: "Competition Day",
+                                 type: "line" as const,
+                                 color: "#888",
+                             },
+                         ]}
+                         wrapperStyle={{ fontSize: "14px" }}
+                         iconSize={20}
+                         verticalAlign="bottom"
+                         height={36}
+                         />
                     </LineChart>
                 </ChartContainer>
             </CardContent>
