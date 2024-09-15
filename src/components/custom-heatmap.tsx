@@ -324,12 +324,12 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="mt-4 lg:mt-8 flex flex-col lg:flex-row">
+                    <div className="mt-4 lg:mt-8 flex flex-row">
                         {correlationData ? (
                             <TooltipProvider>
                                 <div className="flex-grow overflow-x-auto">
                                     <div
-                                        className="grid gap-1"
+                                        className="grid gap-1 mt-16"
                                         style={{
                                             gridTemplateColumns: `auto repeat(${correlationData.columns.length}, minmax(40px, 1fr))`,
                                         }}
