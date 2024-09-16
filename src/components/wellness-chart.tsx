@@ -89,28 +89,18 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
         useState<keyof WellnessData>("Resting HR");
 
     const { data: wellnessData } = useWellnessLoadDataByAthlete(athlete);
+
     const cleanedWellnessData = useCleanedWellnessData(
         wellnessData,
         selectedMetric
     );
     const { data: athleteResults } = useResultsDataByAthlete(athlete);
 
-    const highestRankDates = useMemo(() => {
-        if (!athleteResults) return [];
-        const ranks = athleteResults
-            .map((result) => Number(result["Rank: Athlete"]))
-            .filter((rank) => !isNaN(rank));
-        const highestRank = Math.min(...ranks);
-        return athleteResults
-            .filter((result) => Number(result["Rank: Athlete"]) === highestRank)
-            .map((result) => result.Date);
-    }, [athleteResults]);
-
     const bestTimeDelta = useMemo(() => {
         if (!athleteResults) return null;
         const timeDeltaBest = athleteResults
-            .map((result) => Number(result["Time Delta: Best"]))
-            .filter((delta) => !isNaN(delta));
+            .map((result) => result["Time Delta: Best"])
+            .filter((delta) => delta !== null);
         return Math.min(...timeDeltaBest);
     }, [athleteResults]);
 
@@ -296,12 +286,6 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                     payload: { strokeDasharray: "3 3" },
                                 },
                                 {
-                                    value: "Highest Rank Competition(s)",
-                                    type: "line",
-                                    color: "#4CAF50",
-                                    payload: { strokeDasharray: "5 5" },
-                                },
-                                {
                                     value: "Best Time Delta",
                                     type: "line",
                                     color: "#4b90ad",
@@ -350,23 +334,6 @@ export function WellnessChart({ athlete, className }: WellnessChartProps) {
                                 />
                             );
                         })}
-                        {highestRankDates.map((date, index) => (
-                            <ReferenceLine
-                                key={`highest-rank-${index}`}
-                                x={date}
-                                stroke="#4CAF50"
-                                strokeWidth={3}
-                                strokeDasharray="5 5"
-                                label={{
-                                    value: "Highest Rank",
-                                    position: "top",
-                                    fill: "#4CAF50",
-                                    fontSize: 12,
-                                    fontWeight: "bold",
-                                    offset: 10 + index * 15,
-                                }}
-                            />
-                        ))}
                     </LineChart>
                 </ChartContainer>
             </CardContent>
