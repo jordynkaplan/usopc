@@ -43,10 +43,10 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
     }, [athleteResults]);
 
     useEffect(() => {
-        if (dates.length > 0 && !selectedDate) {
+        if (dates.length > 0) {
             setSelectedDate(dates[0]);
         }
-    }, [dates, selectedDate]);
+    }, [dates, athlete]);
 
     const chartData = useMemo(() => {
         if (!athleteResults || !selectedDate) return [];
