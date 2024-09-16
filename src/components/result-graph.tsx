@@ -61,11 +61,16 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
                 best: selectedResult["Time: Best Heat 1"] || 0,
                 timeDifference: selectedResult["Time Delta: Heat 1"] || 0,
             },
-            {
-                name: "Heat 2",
-                best: selectedResult["Time: Best Heat 2"] || 0,
-                timeDifference: selectedResult["Time Delta: Heat 2"] || 0,
-            },
+            ...(selectedResult["Time: Best Heat 2"] !== null
+                ? [
+                      {
+                          name: "Heat 2",
+                          best: selectedResult["Time: Best Heat 2"] || 0,
+                          timeDifference:
+                              selectedResult["Time Delta: Heat 2"] || 0,
+                      },
+                  ]
+                : []),
         ];
     }, [athleteResults, selectedDate]);
 
@@ -140,8 +145,15 @@ export function ResultGraph({ athlete }: { athlete: string | null }) {
                                         : "default"
                                 }
                             >
-                                {chartData[1]?.timeDifference > 0 ? "+" : ""}
-                                {chartData[1]?.timeDifference.toFixed(2)}s
+                                {chartData?.[1] == null && "DNF"}
+                                {chartData?.[1] != null &&
+                                chartData[1]?.timeDifference > 0
+                                    ? "+"
+                                    : ""}
+                                {chartData?.[1] != null &&
+                                    `${chartData[1]?.timeDifference.toFixed(
+                                        2
+                                    )}s`}
                             </Badge>
                         </div>
                     </div>
