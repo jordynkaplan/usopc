@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes,
+    Navigate,
+} from "react-router-dom";
 import { Athlete } from "./pages/Athlete";
 import { Header } from "./pages/Header";
 import { ThemeProvider } from "./components/theme-provider";
@@ -13,21 +18,46 @@ function App() {
         <TooltipProvider>
             <QueryClientProvider client={queryClient}>
                 <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-                    <div className="bg-muted/40">
-                        <Header></Header>
-                        <div className="p-4 max-w-screen-2xl mx-auto">
-                            <Router>
+                    <Router>
+                        <div className="bg-muted/40">
+                            <Header></Header>
+                            <div className="p-4 max-w-screen-2xl mx-auto">
                                 <Routes>
-                                    <Route path="/" element={<Athlete />} />
+                                    <Route
+                                        path="/"
+                                        element={
+                                            <Navigate
+                                                to="/athlete/wellness"
+                                                replace
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        path="/athlete"
+                                        element={
+                                            <Navigate
+                                                to="/athlete/wellness"
+                                                replace
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        path="/athlete/*"
+                                        element={<Athlete />}
+                                    />
+                                    <Route
+                                        path="/athlete-comparison/*"
+                                        element={<AthleteComparison />}
+                                    />
                                     <Route
                                         path="/athlete-comparison"
                                         element={<AthleteComparison />}
                                     />
                                     <Route path="/" element={<Athlete />} />
                                 </Routes>
-                            </Router>
+                            </div>
                         </div>
-                    </div>
+                    </Router>
                 </ThemeProvider>
             </QueryClientProvider>
         </TooltipProvider>

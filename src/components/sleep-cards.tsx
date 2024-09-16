@@ -70,7 +70,7 @@ export function SleepCards({
     );
 
     return (
-        <div className="my-2 w-full flex-1">
+        <div className="my-4 w-full flex-1">
             <Card className="">
                 <CardHeader>
                     <CardTitle>Sleep Assessment</CardTitle>

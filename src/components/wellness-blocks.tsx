@@ -127,7 +127,7 @@ export function WellnessBlocks({ athlete, portalNode }: WellnessBlocksProps) {
     }, [bestResult, athleteWellnessData]);
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
             <div className="items-center mb-2">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

@@ -14,7 +14,7 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
     const { data: athleteResults } = useResultsDataByAthlete(athlete);
     return (
         <>
-            <Card className="my-2">
+            <Card>
                 <CardContent>
                     <div>
                         <Table>
@@ -124,7 +124,9 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete.Date}</span>
+                                                    <span className="font-mono">
+                                                        {athlete.Date}
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -145,7 +147,13 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Rank: Athlete"]}</span>
+                                                    <span className="font-mono">
+                                                        {
+                                                            athlete[
+                                                                "Rank: Athlete"
+                                                            ]
+                                                        }
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -156,7 +164,12 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Time: Athlete"]?.toFixed(2)}s</span>
+                                                    <span className="font-mono">
+                                                        {athlete[
+                                                            "Time: Athlete"
+                                                        ]?.toFixed(2)}
+                                                        s
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -167,7 +180,12 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Time Delta: Best"]?.toFixed(2)}s</span>
+                                                    <span className="font-mono">
+                                                        {athlete[
+                                                            "Time Delta: Best"
+                                                        ]?.toFixed(2)}
+                                                        s
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -178,7 +196,12 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Time: Athlete Heat 1"]?.toFixed(2)}s</span>
+                                                    <span className="font-mono">
+                                                        {athlete[
+                                                            "Time: Athlete Heat 1"
+                                                        ]?.toFixed(2)}
+                                                        s
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -189,7 +212,12 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Time Delta: Heat 1"]?.toFixed(2)}s</span>
+                                                    <span className="font-mono">
+                                                        {athlete[
+                                                            "Time Delta: Heat 1"
+                                                        ]?.toFixed(2)}
+                                                        s
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -200,7 +228,12 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Split Time: Athlete Heat 1"]?.toFixed(2)}s</span>
+                                                    <span className="font-mono">
+                                                        {athlete[
+                                                            "Split Time: Athlete Heat 1"
+                                                        ]?.toFixed(2)}
+                                                        s
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -238,7 +271,12 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Time: Athlete Heat 2"]?.toFixed(2)}s</span>
+                                                    <span className="font-mono">
+                                                        {athlete[
+                                                            "Time: Athlete Heat 2"
+                                                        ]?.toFixed(2)}
+                                                        s
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -249,7 +287,12 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Time Delta: Heat 2"]?.toFixed(2)}s</span>
+                                                    <span className="font-mono">
+                                                        {athlete[
+                                                            "Time Delta: Heat 2"
+                                                        ]?.toFixed(2)}
+                                                        s
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
@@ -260,7 +303,12 @@ export function ResultsTable({ athlete }: { athlete: string | null }) {
                                                             : ""
                                                     }`}
                                                 >
-                                                    <span className="font-mono">{athlete["Split Time: Athlete Heat 2"]?.toFixed(2)}s</span>
+                                                    <span className="font-mono">
+                                                        {athlete[
+                                                            "Split Time: Athlete Heat 2"
+                                                        ]?.toFixed(2)}
+                                                        s
+                                                    </span>
                                                 </TableCell>
                                                 <TableCell
                                                     className={`text-right ${
