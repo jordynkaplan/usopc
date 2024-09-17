@@ -2,7 +2,7 @@ import { init as initApm } from "@elastic/apm-rum";
 
 const getClientIP = async () => {
     try {
-        const response = await fetch("https://api.ipify.org?format=json");
+        const response = await fetch("/ipify");
         const data = await response.json();
         return data.ip;
     } catch (error) {
@@ -19,7 +19,7 @@ const initializeAPM = async () => {
         serviceName: "usopc-frontend",
 
         // Set custom APM Server URL (default: http://localhost:8200)
-        serverUrl: "https://elastic.kaplan-project.com:8200",
+        serverUrl: "https://kaplan-project.com/elastic",
 
         // Set service version (required for sourcemap feature)
         serviceVersion: "1.0.0",
