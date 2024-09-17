@@ -329,7 +329,7 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
                             <TooltipProvider>
                                 <div className="flex-grow overflow-x-auto">
                                     <div
-                                        className="grid gap-1 mt-16"
+                                        className="grid gap-1 mt-16 w-fit pr-2"
                                         style={{
                                             gridTemplateColumns: `auto repeat(${correlationData.columns.length}, minmax(40px, 1fr))`,
                                         }}
@@ -341,10 +341,7 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
                                                     <TooltipTrigger className="w-full">
                                                         <div
                                                             className={cn(
-                                                                "text-xs font-semibold text-center transform -rotate-45 origin-left whitespace-nowrap",
-                                                                selectedElement?.column ===
-                                                                    column &&
-                                                                    "font-extrabold"
+                                                                "text-xs font-semibold text-center transform -rotate-45 origin-left whitespace-nowrap"
                                                             )}
                                                         >
                                                             {column}
@@ -373,10 +370,7 @@ export function CustomHeatmap({ gender }: { gender: "m" | "f" }) {
                                                         <TooltipTrigger className="w-full">
                                                             <div
                                                                 className={cn(
-                                                                    "text-xs font-semibold text-right pr-2 whitespace-nowrap",
-                                                                    selectedElement?.row ===
-                                                                        row &&
-                                                                        "font-bold"
+                                                                    "text-xs font-semibold text-right pr-2 whitespace-nowrap"
                                                                 )}
                                                             >
                                                                 {row}
