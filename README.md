@@ -2,6 +2,8 @@
 
 This project is a React-based web application for the United States Olympic & Paralympic Committee (USOPC) to monitor and analyze athlete performance and wellness. It's built using React, TypeScript, and Vite, with additional features for routing, state management, and UI components.
 
+Live website: [https://usopc.kaplan-project.com](https://usopc.kaplan-project.com)
+
 ## Key Features
 
 -   Athlete performance tracking
