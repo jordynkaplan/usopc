@@ -1,50 +1,44 @@
-# React + TypeScript + Vite
+# USOPC Athlete Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a React-based web application for the United States Olympic & Paralympic Committee (USOPC) to monitor and analyze athlete performance and wellness. It's built using React, TypeScript, and Vite, with additional features for routing, state management, and UI components.
 
-Currently, two official plugins are available:
+## Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   Athlete performance tracking
+-   Wellness monitoring
+-   Athlete comparison tools
+-   Responsive design for various devices
 
-## Expanding the ESLint configuration
+## Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+-   React 18+
+-   TypeScript
+-   Vite (for fast development and building)
+-   React Router for navigation
+-   React Query for state management and data fetching
+-   Elastic APM for performance monitoring
+-   NGINX for serving the static files
 
-- Configure the top-level `parserOptions` property like this:
+## Project Structure
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+The main application logic is in `src/App.tsx`, which sets up the routing and main layout. Key components include:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+-   `Athlete`: Displays individual athlete data
+-   `AthleteComparison`: Allows comparison between athletes
+-   `Header`: Navigation and app header
+-   Custom UI components using a theme provider
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Getting Started
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
+
+## Building for Production
+
+The project uses a multi-stage Dockerfile for building and serving the application:
+
+1. Build stage: Uses Node.js to build the React application
+2. Production stage: Uses NGINX to serve the static files
+
+To build and run the Docker container:
