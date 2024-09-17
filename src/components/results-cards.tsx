@@ -38,7 +38,7 @@ export function ResultsCards({ athlete }: { athlete: string | null }) {
         : 0;
 
     return (
-        <div className="flex flex-col my-4 gap-4 sm:flex-row">
+        <div className="flex flex-col my-4 gap-4 sm:flex-row flex-wrap">
             <Card className="flex-1">
                 <CardContent className="flex flex-col items-center p-6 justify-center h-full">
                     <p className="text-center">Total Competitions</p>
