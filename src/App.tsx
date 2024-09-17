@@ -4,12 +4,16 @@ import {
     Routes,
     Navigate,
 } from "react-router-dom";
+// import { ApmRoutes as Routes } from "@elastic/apm-rum-react";
+// import { ApmRoute as Route } from "@elastic/apm-rum-react";
+
 import { Athlete } from "./pages/Athlete";
 import { Header } from "./pages/Header";
 import { ThemeProvider } from "./components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AthleteComparison } from "./pages/Athlete-Comparison";
 import { TooltipProvider } from "./components/ui/tooltip";
+import "./rum";
 
 const queryClient = new QueryClient();
 
