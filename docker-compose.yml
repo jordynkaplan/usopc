@@ -2,8 +2,7 @@ version: "3.9"
 
 services:
     frontend:
-        build:
-            context: .
+        image: ghcr.io/jordynkaplan/usopc:main
         ports:
             - "80:80"
         networks:
